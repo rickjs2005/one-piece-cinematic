@@ -3,6 +3,7 @@ import { Manifesto } from "@/components/sections/Manifesto";
 import { Era } from "@/components/sections/Era";
 import { Crew } from "@/components/sections/Crew";
 import { FlagReveal } from "@/components/sections/FlagReveal";
+import { GrandLineMap } from "@/components/sections/GrandLineMap";
 import { Moments } from "@/components/sections/Moments";
 import { Voices } from "@/components/sections/Voices";
 import { Footer } from "@/components/sections/Footer";
@@ -45,6 +46,9 @@ export default function Home() {
       />
 
       <FlagReveal />
+      {/* O mapa dá a visão geral da rota; a Jornada logo em seguida entra nas
+          paradas que importaram. Invertido, os momentos chegariam sem chão. */}
+      <GrandLineMap />
       <Moments />
       <Voices />
       <Footer />

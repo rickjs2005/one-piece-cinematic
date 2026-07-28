@@ -78,14 +78,16 @@ export function ThroneHero() {
       <div className="bg-abyss sticky top-0 h-[100svh] w-full overflow-hidden">
         <ShotLayer
           id="throne"
-          src={throneShot}
+          video="/video/throne.mp4"
+          poster={throneShot}
           z={10}
           priority
           shade="bg-abyss/20"
         />
         <ShotLayer
           id="eyes"
-          src={eyesShot}
+          video="/video/eyes.mp4"
+          poster={eyesShot}
           z={20}
           priority
           shade="bg-abyss/10"

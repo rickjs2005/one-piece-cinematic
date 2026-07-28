@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Inter } from "next/font/google";
 import { SmoothScroll } from "@/lib/smooth-scroll";
+import { Preloader } from "@/components/ui/Preloader";
 import "./globals.css";
 
 const anton = Anton({
@@ -31,6 +32,7 @@ export default function RootLayout({
       className={`${anton.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="bg-abyss text-parchment min-h-full">
+        <Preloader />
         <SmoothScroll />
         {children}
       </body>
