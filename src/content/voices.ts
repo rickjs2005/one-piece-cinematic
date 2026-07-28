@@ -11,6 +11,13 @@ import luffySanji from "../../public/art/voice-luffy-sanji.webp";
 
 export type Voice = {
   id: string;
+  /**
+   * Primeira metade da fala, quando ela é uma pergunta seguida de resposta.
+   * Renderizada menor, acima da frase principal. Achatar esse tipo de fala em
+   * uma afirmação só ("um homem morre quando é esquecido") entrega a mesma
+   * informação e joga fora a pausa — que é onde a frase machuca.
+   */
+  lead?: string;
   quote: string;
   speaker: string;
   context: string;
@@ -47,7 +54,8 @@ export const VOICES: Voice[] = [
   },
   {
     id: "hiluluk",
-    quote: "Um homem morre quando é esquecido.",
+    lead: "Quando é que um homem morre?",
+    quote: "Quando é esquecido.",
     speaker: "Dr. Hiluluk",
     context: "Drum Island, segundos antes do fim",
     weight: "Ele morreu rindo, de braços abertos, sem nenhum remédio que funcionasse.",

@@ -233,6 +233,20 @@ export function Voices() {
                 </span>
 
                 <blockquote className="mt-5">
+                  {voice.lead && (
+                    <p className="display text-parchment/45 mb-3 text-[clamp(1.1rem,2.3vw,2.1rem)] leading-[1.1]">
+                      {voice.lead.split(" ").map((word, wordIndex) => (
+                        <span
+                          key={`lead-${word}-${wordIndex}`}
+                          className="mr-[0.22em] inline-block overflow-hidden"
+                        >
+                          <span data-voice-word className="inline-block">
+                            {word}
+                          </span>
+                        </span>
+                      ))}
+                    </p>
+                  )}
                   <p className="display text-[clamp(2rem,4.6vw,4.5rem)] leading-[1.03]">
                     {voice.quote.split(" ").map((word, wordIndex) => (
                       // O espaço vai como margem: dentro de um `inline-block`
