@@ -5,14 +5,44 @@ import { Crew } from "@/components/sections/Crew";
 import { Moments } from "@/components/sections/Moments";
 import { Voices } from "@/components/sections/Voices";
 import { Footer } from "@/components/sections/Footer";
+import { Marquee } from "@/components/ui/Marquee";
 
 export default function Home() {
   return (
     <main>
       <ThroneHero />
       <Manifesto />
+
+      <Marquee
+        items={[
+          "A Era dos Piratas",
+          "O Século Vazio",
+          "Grand Line",
+          "Laugh Tale",
+          "D.",
+        ]}
+      />
+
       <Era />
       <Crew />
+
+      <Marquee
+        reverse
+        duration={42}
+        items={[
+          "Luffy",
+          "Zoro",
+          "Nami",
+          "Usopp",
+          "Sanji",
+          "Chopper",
+          "Robin",
+          "Franky",
+          "Brook",
+          "Jinbe",
+        ]}
+      />
+
       <Moments />
       <Voices />
       <Footer />

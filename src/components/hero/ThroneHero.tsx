@@ -5,12 +5,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { applyHeroFinalState, buildHeroTimeline } from "@/lib/hero-timeline";
-import { ArtCloseLayer } from "./layers/ArtCloseLayer";
-import { ArtThroneLayer } from "./layers/ArtThroneLayer";
-import { DarknessMask } from "./layers/DarknessMask";
-import { EyesLayer } from "./layers/EyesLayer";
-import { LightRaysLayer } from "./layers/LightRaysLayer";
-import { SwordsLayer } from "./layers/SwordsLayer";
+import { ShotLayer } from "./layers/ShotLayer";
+import eyesShot from "../../../public/art/eyes-dark.webp";
+import throneShot from "../../../public/art/throne-room.webp";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -30,8 +27,7 @@ export function ThroneHero() {
       const el = root.current;
       if (!el) return;
 
-      const q = (selector: string) =>
-        el.querySelector<HTMLElement>(selector);
+      const q = (selector: string) => el.querySelector<HTMLElement>(selector);
 
       const mm = gsap.matchMedia();
 
@@ -55,7 +51,7 @@ export function ThroneHero() {
 
           const tl = buildHeroTimeline(q, {
             allowBlur: wide,
-            dollyDepth: wide ? 3 : 2,
+            dollyDepth: wide ? 1.85 : 1.45,
           });
 
           ScrollTrigger.create({
@@ -79,33 +75,54 @@ export function ThroneHero() {
       className="relative h-[400svh]"
       aria-label="One Piece — abertura"
     >
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        <ArtThroneLayer />
-        <LightRaysLayer />
-        <ArtCloseLayer />
-        <DarknessMask />
-        <EyesLayer />
-        <SwordsLayer />
+      <div className="bg-abyss sticky top-0 h-[100svh] w-full overflow-hidden">
+        <ShotLayer
+          id="throne"
+          src={throneShot}
+          z={10}
+          priority
+          shade="bg-abyss/20"
+        />
+        <ShotLayer
+          id="eyes"
+          src={eyesShot}
+          z={20}
+          priority
+          shade="bg-abyss/10"
+        />
 
-        {/* Título e dica de scroll ficam acima de tudo. */}
-        <div className="pointer-events-none absolute inset-0 z-[60] flex flex-col items-center justify-end pb-[12svh]">
+        {/* Escuridão em volta da cena. Fica acima dos planos e abaixo do
+            título — é ela que faz a abertura ler como breu. */}
+        <div
+          data-vignette
+          className="pointer-events-none absolute inset-0 z-30"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 48%, transparent 22%, rgba(5,7,13,0.55) 52%, rgba(5,7,13,0.95) 85%)",
+          }}
+        />
+
+        <div className="pointer-events-none absolute inset-0 z-[60] flex flex-col items-center justify-end pb-[14svh]">
           <h1
             data-hero-title
-            className="font-display text-parchment px-6 text-center text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] opacity-0"
+            className="display text-parchment px-6 text-center text-[clamp(3.5rem,15vw,13rem)] opacity-0"
           >
             One Piece
-            <span className="text-crimson block text-[0.2em] tracking-[0.4em] uppercase not-italic opacity-80">
-              a história que o mundo tentou apagar
-            </span>
           </h1>
+          <p
+            data-hero-sub
+            className="label-caps text-blood mt-6 px-6 text-center opacity-0"
+          >
+            A história que o mundo tentou apagar
+          </p>
         </div>
 
         <div
           data-scroll-hint
-          className="text-mist pointer-events-none absolute inset-x-0 bottom-10 z-[60] flex flex-col items-center gap-3"
+          className="text-fog pointer-events-none absolute inset-x-0 bottom-10 z-[60] flex flex-col items-center gap-3"
         >
           <span className="label-caps">Role para revelar</span>
-          <span className="via-crimson h-12 w-px bg-gradient-to-b from-transparent to-transparent" />
+          <span className="via-blood h-12 w-px bg-gradient-to-b from-transparent to-transparent" />
         </div>
       </div>
     </section>

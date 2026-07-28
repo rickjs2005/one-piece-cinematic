@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-void: #030203;
-  --color-crimson: #e5153f;
-  --color-glow: #ff2d55;
-  --color-gold: #d4a63c;
-  --color-mist: #7c93ae;
-  --color-parchment: #e8e2d6;
+  /* Azul-noite profundo, não preto puro: o mar continua presente até no escuro. */
+  --color-abyss: #05070d;
+  --color-deep: #0b1220;
+  --color-ocean: #1b4b8f;
+  --color-surf: #35c2e8;
 
-  --font-display: var(--font-instrument-serif);
+  --color-blood: #e4232c;
+  --color-ember: #ff5a3c;
+  --color-gold: #f5b740;
+  --color-parchment: #f4efe4;
+  --color-fog: #8ba0bd;
+
+  --font-display: var(--font-anton);
   --font-sans: var(--font-inter);
 }
 
@@ -17,19 +22,19 @@
 }
 
 html {
-  background-color: var(--color-void);
+  background-color: var(--color-abyss);
 }
 
 body {
-  background-color: var(--color-void);
+  background-color: var(--color-abyss);
   color: var(--color-parchment);
   font-family: var(--font-sans);
   overscroll-behavior-y: none;
 }
 
 ::selection {
-  background-color: var(--color-crimson);
-  color: var(--color-void);
+  background-color: var(--color-blood);
+  color: var(--color-parchment);
 }
 
 /* Lenis assume o scroll; o comportamento nativo brigaria com ele. */
@@ -42,25 +47,38 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
-/* Rótulo em caixa alta muito espaçado, usado em toda a página. */
-@utility label-caps {
-  font-size: 0.6875rem;
-  letter-spacing: 0.32em;
+/* Display de pôster: Anton já é pesada, o tracking negativo fecha as palavras
+   em bloco. Sem isso o título parece legenda, não cartaz de cinema. */
+@utility display {
+  font-family: var(--font-display);
   text-transform: uppercase;
-  font-weight: 500;
+  letter-spacing: -0.02em;
+  /* 0.92, não menos: a Anton tem caixa alta muito alta e acentos do português
+     (Ç, Ú, Ó) saem da linha. Abaixo disso as linhas colidem e qualquer
+     contêiner com overflow-hidden decapita a primeira. */
+  line-height: 0.92;
+  font-weight: 400;
 }
 
-/* Filete carmesim que separa as seções sem virar uma borda dura. */
-@utility rule-crimson {
-  background-image: linear-gradient(
-    to right,
-    transparent,
-    var(--color-crimson),
-    transparent
-  );
-  height: 1px;
-  opacity: 0.35;
+@utility label-caps {
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
+
+/* Contorno vazado — usado nas palavras secundárias dos títulos grandes para
+   criar hierarquia dentro da mesma linha sem trocar de tamanho. */
+@utility text-hollow {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-parchment);
+}
+
+/* NÃO reintroduzir grão de filme com `feTurbulence` em SVG. Uma camada dessas
+   em tela cheia sob `mix-blend-mode` travou o renderizador do Chrome por
+   completo — a página parava de responder antes mesmo do primeiro scroll.
+   Se o grão voltar algum dia, tem que ser uma textura raster pequena e sem
+   blend mode, e precisa ser medida no navegador antes de subir. */
 
 @media (prefers-reduced-motion: reduce) {
   *,

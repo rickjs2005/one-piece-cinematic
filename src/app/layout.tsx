@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Anton, Inter } from "next/font/google";
 import { SmoothScroll } from "@/lib/smooth-scroll";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const anton = Anton({
+  variable: "--font-anton",
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
 });
 
 const inter = Inter({
@@ -16,9 +15,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Animes — O Trono Vazio",
+  title: "One Piece — A história que o mundo tentou apagar",
   description:
-    "Por oitocentos anos o mundo acreditou que o trono estava vazio. A cadeira no centro de Pangea nunca teve dono declarado — e nunca esteve sem ocupante.",
+    "De um homem rindo no cadafalso até uma cadeira no fim do mundo. A jornada, a tripulação e as falas que ficaram.",
 };
 
 export default function RootLayout({
@@ -29,9 +28,9 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${instrumentSerif.variable} ${inter.variable} h-full antialiased`}
+      className={`${anton.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="bg-void text-parchment min-h-full">
+      <body className="bg-abyss text-parchment min-h-full">
         <SmoothScroll />
         {children}
       </body>

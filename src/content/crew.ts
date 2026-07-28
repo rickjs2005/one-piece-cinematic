@@ -1,3 +1,15 @@
+import type { StaticImageData } from "next/image";
+import luffy from "../../public/art/crew-luffy.webp";
+import zoro from "../../public/art/crew-zoro.webp";
+import nami from "../../public/art/crew-nami.webp";
+import usopp from "../../public/art/crew-usopp.webp";
+import sanji from "../../public/art/crew-sanji.webp";
+import chopper from "../../public/art/crew-chopper.webp";
+import robin from "../../public/art/crew-robin.webp";
+import franky from "../../public/art/crew-franky.webp";
+import brook from "../../public/art/crew-brook.webp";
+import jinbe from "../../public/art/crew-jinbe.webp";
+
 export type CrewMate = {
   id: string;
   name: string;
@@ -5,18 +17,7 @@ export type CrewMate = {
   bounty: string;
   dream: string;
   quote: string;
-  /** Emblema vetorial do personagem — ver components/ui/CrewEmblem.tsx */
-  emblem:
-    | "hat"
-    | "swords"
-    | "compass"
-    | "slingshot"
-    | "flame"
-    | "antlers"
-    | "flower"
-    | "star"
-    | "note"
-    | "wave";
+  portrait: StaticImageData;
 };
 
 export const CREW: CrewMate[] = [
@@ -27,7 +28,7 @@ export const CREW: CrewMate[] = [
     bounty: "3.000.000.000",
     dream: "Ser o Rei dos Piratas",
     quote: "Eu vou ser o Rei dos Piratas!",
-    emblem: "hat",
+    portrait: luffy,
   },
   {
     id: "zoro",
@@ -36,7 +37,7 @@ export const CREW: CrewMate[] = [
     bounty: "1.111.000.000",
     dream: "Ser o maior espadachim do mundo",
     quote: "Não aconteceu nada.",
-    emblem: "swords",
+    portrait: zoro,
   },
   {
     id: "nami",
@@ -45,7 +46,7 @@ export const CREW: CrewMate[] = [
     bounty: "366.000.000",
     dream: "Desenhar o mapa do mundo inteiro",
     quote: "Luffy… me ajuda.",
-    emblem: "compass",
+    portrait: nami,
   },
   {
     id: "usopp",
@@ -54,7 +55,7 @@ export const CREW: CrewMate[] = [
     bounty: "500.000.000",
     dream: "Virar um bravo guerreiro do mar",
     quote: "Eu sou o homem que vai virar um bravo guerreiro do mar!",
-    emblem: "slingshot",
+    portrait: usopp,
   },
   {
     id: "sanji",
@@ -63,7 +64,7 @@ export const CREW: CrewMate[] = [
     bounty: "1.032.000.000",
     dream: "Encontrar o All Blue",
     quote: "Um cozinheiro não deixa ninguém passar fome. Nem um inimigo.",
-    emblem: "flame",
+    portrait: sanji,
   },
   {
     id: "chopper",
@@ -72,7 +73,7 @@ export const CREW: CrewMate[] = [
     bounty: "1.000",
     dream: "Curar qualquer doença do mundo",
     quote: "Eu quero ser um monstro que ajuda as pessoas!",
-    emblem: "antlers",
+    portrait: chopper,
   },
   {
     id: "robin",
@@ -81,7 +82,7 @@ export const CREW: CrewMate[] = [
     bounty: "930.000.000",
     dream: "Descobrir a História Verdadeira",
     quote: "Eu quero viver!",
-    emblem: "flower",
+    portrait: robin,
   },
   {
     id: "franky",
@@ -90,7 +91,7 @@ export const CREW: CrewMate[] = [
     bounty: "394.000.000",
     dream: "Construir o navio que dá a volta ao mundo",
     quote: "SUPER!",
-    emblem: "star",
+    portrait: franky,
   },
   {
     id: "brook",
@@ -99,7 +100,7 @@ export const CREW: CrewMate[] = [
     bounty: "383.000.000",
     dream: "Reencontrar Laboon",
     quote: "Yohohoho!",
-    emblem: "note",
+    portrait: brook,
   },
   {
     id: "jinbe",
@@ -108,6 +109,6 @@ export const CREW: CrewMate[] = [
     bounty: "1.100.000.000",
     dream: "Um mar onde humanos e homens-peixe convivam",
     quote: "Pare de contar o que perdeu. O que sobrou pra você?",
-    emblem: "wave",
+    portrait: jinbe,
   },
 ];

@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 /**
  * A jornada, em linha do tempo.
  *
- * A linha vertical carmesim cresce em `scaleY` acompanhando o progresso do
+ * A linha vertical vermelha cresce em `scaleY` acompanhando o progresso do
  * scroll dentro da seção — é o único elemento com scrub aqui; o texto entra
  * com o Reveal padrão, que não amarra leitura ao movimento do dedo.
  */
@@ -52,45 +52,51 @@ export function Moments() {
       className="relative px-6 py-32 md:px-16"
       aria-label="A jornada"
     >
-      <Reveal className="mx-auto mb-20 max-w-3xl">
-        <span className="label-caps text-crimson">De Loguetown até o fim do mapa</span>
-        <h2 className="font-display mt-3 text-[clamp(2rem,5vw,4rem)] leading-none">
-          A Jornada
+      <Reveal className="mx-auto mb-24 max-w-4xl">
+        <span className="label-caps text-blood">
+          De Loguetown até o fim do mapa
+        </span>
+        <h2 className="display mt-4 text-[clamp(2.5rem,8vw,7rem)]">
+          A <span className="text-hollow">Jornada</span>
         </h2>
       </Reveal>
 
-      <div className="relative mx-auto max-w-3xl">
+      <div className="relative mx-auto max-w-4xl">
         {/* Trilho de fundo + linha viva que cresce com o scroll. */}
-        <div className="bg-mist/12 absolute top-2 bottom-2 left-[7px] w-px md:left-[9px]" />
+        <div className="bg-parchment/10 absolute top-2 bottom-2 left-[9px] w-px" />
         <div
           data-spine
-          className="bg-crimson absolute top-2 bottom-2 left-[7px] w-px md:left-[9px]"
+          className="bg-blood absolute top-2 bottom-2 left-[9px] w-px"
         />
 
-        <ol className="space-y-16">
+        <ol className="space-y-20">
           {MOMENTS.map((moment, index) => (
-            <li key={moment.title} className="relative pl-10 md:pl-14">
+            <li key={moment.title} className="relative pl-12 md:pl-16">
+              {/* O marcador fica FORA do Reveal de propósito. O Reveal aplica
+                  um transform, e elemento transformado vira bloco de contenção
+                  para descendentes absolutos — dentro dele o `left-0` passava a
+                  valer a partir do padding e o losango caía em cima do texto. */}
+              <span
+                className={`absolute top-1 left-0 h-5 w-5 rotate-45 border-2 ${
+                  moment.ongoing
+                    ? "border-fog/50 bg-abyss"
+                    : "border-blood bg-blood/30"
+                }`}
+                aria-hidden="true"
+              />
               <Reveal delay={index * 0.03}>
-                <span
-                  className={`absolute top-1.5 left-0 h-4 w-4 rounded-full border-2 md:h-[22px] md:w-[22px] ${
-                    moment.ongoing
-                      ? "border-mist/40 bg-void"
-                      : "border-crimson bg-crimson/25"
-                  }`}
-                  aria-hidden="true"
-                />
                 <div className="flex flex-wrap items-baseline gap-x-4">
                   <span className="label-caps text-gold">{moment.marker}</span>
-                  <span className="label-caps text-mist/60">{moment.place}</span>
+                  <span className="label-caps text-fog/60">{moment.place}</span>
                 </div>
-                <h3 className="font-display mt-2 text-3xl md:text-4xl">
+                <h3 className="display mt-3 text-3xl md:text-5xl">
                   {moment.title}
                 </h3>
-                <p className="text-parchment/70 mt-3 max-w-xl leading-relaxed">
+                <p className="text-parchment/75 mt-4 max-w-2xl leading-relaxed">
                   {moment.description}
                 </p>
                 {moment.ongoing && (
-                  <p className="text-mist label-caps mt-4">
+                  <p className="text-fog label-caps mt-5">
                     Ainda em curso na obra
                   </p>
                 )}
