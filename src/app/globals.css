@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #030203;
+  --color-crimson: #e5153f;
+  --color-glow: #ff2d55;
+  --color-gold: #d4a63c;
+  --color-mist: #7c93ae;
+  --color-parchment: #e8e2d6;
+
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background-color: var(--color-void);
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-parchment);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background-color: var(--color-crimson);
+  color: var(--color-void);
+}
+
+/* Lenis assume o scroll; o comportamento nativo brigaria com ele. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Rótulo em caixa alta muito espaçado, usado em toda a página. */
+@utility label-caps {
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Filete carmesim que separa as seções sem virar uma borda dura. */
+@utility rule-crimson {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-crimson),
+    transparent
+  );
+  height: 1px;
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

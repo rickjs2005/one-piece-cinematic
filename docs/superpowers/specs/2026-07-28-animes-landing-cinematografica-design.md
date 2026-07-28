@@ -70,8 +70,14 @@ em nenhuma camada, e testar a timeline sem DOM real.
 
 ## Hero — especificação da cena
 
-Seção pinada, 400vh de altura de scroll, uma única `gsap.timeline` com `scrub: 1`.
-Progresso 0 → 1 mapeado assim:
+Seção de 400vh com um palco `position: sticky`, uma única `gsap.timeline` com
+`scrub: 1`. Progresso 0 → 1 mapeado assim:
+
+> **Desvio da primeira versão deste spec:** o palco usa `sticky`, não o `pin` do
+> ScrollTrigger. Sticky não cria pin-spacer, não desloca o resto da página e não
+> precisa de `ScrollTrigger.refresh()` depois que as imagens carregam — a altura
+> do gatilho é 400vh fixos e não depende do conteúdo. Isso elimina a fragilidade
+> que este spec originalmente listava como risco.
 
 Ordem de empilhamento, de baixo para cima:
 
@@ -80,13 +86,24 @@ Ordem de empilhamento, de baixo para cima:
 | 10 | Arte trono | scale, blur, opacity | 3.0, blur 10px, opacity 0 | fade-in 48%, scale 1.0, blur 0 |
 | 15 | Raios de luz | opacity, scaleY | 0 | 0.7 a partir de 45% |
 | 20 | Arte close | scale, opacity | 2.8, opacity 0 | fade-in 18%, fade-out 55%, scale 1.0 |
-| 30 | **Máscara escuridão** | `--reveal` (raio %) | 0% | 160% |
+| 30 | **Máscara escuridão** | scale, opacity | 1.0, opacity 1 | 1.45, opacity 0.5 |
 | 40 | **Olhos (SVG)** | scale, opacity | close absoluto, opacity 1 | some em 30% |
 | 50 | Espadas | y, blur | fora da tela | entra em 75%, blur 8px |
 
-A máscara de escuridão é o mecanismo central da revelação: um overlay preto com
-`radial-gradient(circle at 50% 45%, transparent var(--reveal), #030203 calc(var(--reveal) + 25%))`.
-GSAP anima a custom property `--reveal`.
+A máscara de escuridão é um overlay com `radial-gradient` **estático**; o que anima
+é `scale` + `opacity`, ambos compositados na GPU.
+
+**Desvio da primeira versão deste spec:** ela previa animar o raio do gradiente via
+custom property `--reveal`. Na implementação ficou claro que isso repinta a tela
+inteira a cada frame sem ganho visual, porque quem de fato revela a cena é a
+opacidade das próprias camadas de arte (que sobem de 0 sobre um fundo já preto). O
+papel real da máscara é a vinheta — manter as bordas escuras para que a revelação
+leia como luz se abrindo do centro em vez de um crossfade chapado. Escala e
+opacidade entregam isso de graça.
+
+A escala só cresce (1 → 1.45) e nunca encolhe: assim a camada cobre a viewport
+inteira em qualquer ponto da timeline. Encolher abriria os cantos e as artes
+vazariam sem vinheta.
 
 **A máscara fica abaixo dos olhos, e isso é obrigatório.** Ela existe para esconder as
 artes (z10–z20) enquanto o scroll não avança; os olhos precisam brilhar *através* da
@@ -164,8 +181,9 @@ elemento — o mais claro é `--parchment`.
 Superfície de erro é mínima (site estático). Os pontos reais:
 
 - **GSAP/ScrollTrigger antes da hidratação:** toda inicialização dentro de
-  `useGSAP` com `scope`, e `ScrollTrigger.refresh()` após o `load` das imagens do
-  hero — sem isso o pin calcula altura errada.
+  `useGSAP` com `scope`. Com o palco em `sticky` o `refresh()` pós-load deixou de
+  ser necessário; onde a medição depende de conteúdo (a trilha horizontal dos
+  Anciães) o valor é passado como função com `invalidateOnRefresh: true`.
 - **Falha ao carregar as artes:** o hero degrada para a camada de olhos SVG +
   escuridão, que é auto-suficiente e não depende de nenhum arquivo externo.
 - **Lenis indisponível:** o scroll nativo continua funcionando; o ScrollTrigger não
