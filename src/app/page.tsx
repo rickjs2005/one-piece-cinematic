@@ -2,6 +2,7 @@ import { ThroneHero } from "@/components/hero/ThroneHero";
 import { Manifesto } from "@/components/sections/Manifesto";
 import { Era } from "@/components/sections/Era";
 import { Crew } from "@/components/sections/Crew";
+import { FlagReveal } from "@/components/sections/FlagReveal";
 import { Moments } from "@/components/sections/Moments";
 import { Voices } from "@/components/sections/Voices";
 import { Footer } from "@/components/sections/Footer";
@@ -43,6 +44,7 @@ export default function Home() {
         ]}
       />
 
+      <FlagReveal />
       <Moments />
       <Voices />
       <Footer />

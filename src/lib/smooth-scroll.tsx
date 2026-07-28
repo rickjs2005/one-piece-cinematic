@@ -30,11 +30,20 @@ export function SmoothScroll() {
 
     lenis.on("scroll", ScrollTrigger.update);
 
+    // Rede de segurança: o Lenis só emite `scroll` para o movimento que ele
+    // mesmo conduz. Um scroll programático — âncora, tecla Home/End, ou a
+    // restauração de posição do navegador ao recarregar — mexe na página sem
+    // passar por ele, e o ScrollTrigger ficaria com a posição antiga (no nosso
+    // caso, o painel da Jornada travava na primeira cena).
+    const syncNative = () => ScrollTrigger.update();
+    window.addEventListener("scroll", syncNative, { passive: true });
+
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      window.removeEventListener("scroll", syncNative);
       gsap.ticker.remove(tick);
       gsap.ticker.lagSmoothing(500, 33);
       lenis.destroy();

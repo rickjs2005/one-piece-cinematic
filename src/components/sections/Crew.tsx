@@ -48,6 +48,30 @@ export function Crew() {
           }),
         });
 
+        // Recompensas contando de zero até o valor. É um número absurdo, e
+        // vê-lo subir vende o tamanho dele melhor do que lê-lo parado.
+        gsap.utils.toArray<HTMLElement>("[data-bounty]").forEach((el, i) => {
+          const target = Number(el.dataset.value ?? 0);
+          const counter = { value: 0 };
+
+          gsap.to(counter, {
+            value: target,
+            duration: 1.8,
+            delay: i * 0.06,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = Math.round(counter.value).toLocaleString(
+                "pt-BR",
+              );
+            },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top 70%",
+              once: true,
+            },
+          });
+        });
+
         // Parallax interno dos retratos, no sentido contrário à trilha.
         gsap.utils.toArray<HTMLElement>("[data-portrait]").forEach((img) => {
           gsap.fromTo(
@@ -132,7 +156,15 @@ export function Crew() {
                 </blockquote>
 
                 <p className="text-fog/60 label-caps mt-4">
-                  ฿ {mate.bounty}
+                  ฿{" "}
+                  {/* O valor de partida no HTML é o número final: se o JS não
+                      rodar, a recompensa continua correta na tela. */}
+                  <span
+                    data-bounty
+                    data-value={mate.bounty.replaceAll(".", "")}
+                  >
+                    {mate.bounty}
+                  </span>
                 </p>
               </div>
             </article>
