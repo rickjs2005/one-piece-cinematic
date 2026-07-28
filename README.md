@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# One Piece — A história que o mundo tentou apagar
 
-## Getting Started
+Peça cinematográfica de página única sobre a história de One Piece. Uma cena
+controlada pelo scroll abre o site, e a partir dela a página conta a jornada:
+como a Era dos Piratas começou, quem são os Chapéus de Palha, a rota até o fim
+do mapa, os momentos que marcaram e as falas que ficaram.
 
-First, run the development server:
+Projeto de demonstração. Sem vínculo com os detentores dos direitos da obra.
+
+## Stack
+
+- **Next.js 16** (App Router) + TypeScript
+- **Tailwind CSS 4**
+- **GSAP 3** + ScrollTrigger para toda a animação
+- **Lenis** para suavizar o scroll que alimenta o ScrollTrigger
+
+Site estático — sem backend, banco ou API.
+
+## Rodando
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Em `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para conferir o desempenho de verdade, use o build de produção: em
+desenvolvimento o otimizador de imagens processa as artes sob demanda e
+disputa CPU com o navegador.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build && npm run start
+```
 
-## Learn More
+## Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/                 layout, página, tokens de cor e tipografia
+src/components/hero/     a cena de abertura e suas camadas
+src/components/sections/ Manifesto, Era, Crew, FlagReveal, Rota, Jornada, Falas
+src/components/ui/       Preloader, Marquee, Reveal, ParallaxBackdrop
+src/content/             todo o texto e os dados, separados dos componentes
+src/lib/                 timeline do hero e integração Lenis + ScrollTrigger
+scripts/                 utilitário que reduz as artes ao tamanho de uso
+public/art/              33 ilustrações
+public/video/            2 planos do hero
+docs/superpowers/specs/  o documento de design que originou o projeto
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Todo o texto vive em `src/content/`. Trocar uma fala, uma ilha da rota ou um
+tripulante não exige tocar em componente nenhum.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Decisões que valem saber
 
-## Deploy on Vercel
+**O palco das seções fixas usa `position: sticky`, não o `pin` do
+ScrollTrigger.** Sticky não cria pin-spacer, não desloca o resto da página e
+não depende de remedição depois que as imagens carregam.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**O Lenis só emite evento para o scroll que ele mesmo conduz.** Um scroll
+programático — âncora, tecla Home, restauração de posição ao recarregar —
+deixaria o ScrollTrigger com a posição antiga, então há um listener nativo de
+`scroll` como rede de segurança em `src/lib/smooth-scroll.tsx`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**As artes são reduzidas ao tamanho em que aparecem** (`scripts/downscale-art.mjs`).
+Em 2K a página travava o renderizador do Chrome. Se novas artes forem
+adicionadas, rode o script antes de commitar.
+
+**Nada de `feTurbulence` em tela cheia.** Uma camada de grão de filme em SVG
+sob `mix-blend-mode` travou o navegador por completo — está anotado em
+`globals.css` para não voltar.
+
+**`prefers-reduced-motion` é respeitado em toda seção animada**: o hero mostra
+o quadro final sem scrub, os vídeos dão lugar às imagens estáticas, e as
+galerias horizontais viram listas de scroll comum.
+
+## Créditos
+
+One Piece — Eiichiro Oda / Shueisha / Toei Animation.
+As ilustrações do site foram geradas por IA, inspiradas na obra.
