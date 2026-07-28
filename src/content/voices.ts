@@ -7,6 +7,7 @@ import doflamingo from "../../public/art/voice-doflamingo.webp";
 import whitebeard from "../../public/art/voice-whitebeard.webp";
 import ace from "../../public/art/voice-ace.webp";
 import rayleigh from "../../public/art/voice-rayleigh.webp";
+import zoro from "../../public/art/voice-zoro.webp";
 import luffySanji from "../../public/art/voice-luffy-sanji.webp";
 
 export type Voice = {
@@ -25,13 +26,17 @@ export type Voice = {
   weight: string;
   portrait: StaticImageData;
   /** Token de cor do acento — dá temperatura emocional a cada painel. */
-  accent: "gold" | "blood" | "ember" | "surf" | "orchid" | "violet";
+  accent: "gold" | "blood" | "ember" | "surf" | "orchid" | "violet" | "jade";
 };
 
 /**
  * As falas em ordem narrativa, não cronológica: começa no homem que abriu a
  * era e termina na frase mais humana da obra. O arco é começo → herança →
- * morte → sonho → cinismo → verdade → gratidão → continuidade → amizade.
+ * morte → sonho → cinismo → verdade → gratidão → continuidade → lealdade.
+ *
+ * As duas últimas são um par de propósito: o tripulante jurando ao capitão, e
+ * o capitão se ajoelhando pelo tripulante. Uma explica a outra, e separá-las
+ * jogaria fora o espelho.
  */
 export const VOICES: Voice[] = [
   {
@@ -106,6 +111,17 @@ export const VOICES: Voice[] = [
     weight: "Governos caem, eras acabam, mas a vontade passa de mão em mão.",
     portrait: rayleigh,
     accent: "surf",
+  },
+  {
+    id: "zoro",
+    lead: "Até eu derrotar ele e virar o maior espadachim do mundo…",
+    quote: "eu nunca mais vou perder.",
+    speaker: "Roronoa Zoro, para Luffy",
+    context: "Baratie, de joelhos, depois de perder para o Mihawk",
+    weight:
+      "Ergueu as espadas com o peito aberto e perguntou: algum problema, Rei dos Piratas? Luffy ainda não era rei de nada.",
+    portrait: zoro,
+    accent: "jade",
   },
   {
     id: "luffy-sanji",

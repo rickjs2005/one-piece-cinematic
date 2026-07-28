@@ -30,6 +30,7 @@ const ACCENT_TEXT: Record<Voice["accent"], string> = {
   surf: "text-surf",
   orchid: "text-orchid",
   violet: "text-violet",
+  jade: "text-jade",
 };
 
 /**
@@ -51,6 +52,7 @@ const ACCENT_GLOW: Record<Voice["accent"], string> = {
     "[background:radial-gradient(ellipse_at_center,rgba(224,87,176,0.28),transparent_70%)]",
   violet:
     "[background:radial-gradient(ellipse_at_center,rgba(139,108,240,0.30),transparent_70%)]",
+  jade: "[background:radial-gradient(ellipse_at_center,rgba(78,203,139,0.26),transparent_70%)]",
 };
 
 const ACCENT_BAR: Record<Voice["accent"], string> = {
@@ -60,6 +62,7 @@ const ACCENT_BAR: Record<Voice["accent"], string> = {
   surf: "bg-surf",
   orchid: "bg-orchid",
   violet: "bg-violet",
+  jade: "bg-jade",
 };
 
 export function Voices() {
@@ -180,7 +183,7 @@ export function Voices() {
           Falas <span className="text-hollow">Marcantes</span>
         </h2>
         <p className="text-fog mt-6 max-w-xl leading-relaxed">
-          Nove frases que sobreviveram aos arcos em que foram ditas.
+          Dez frases que sobreviveram aos arcos em que foram ditas.
         </p>
       </header>
 
