@@ -77,7 +77,7 @@ export function ThroneHero() {
     <section
       ref={root}
       className="relative h-[400svh]"
-      aria-label="O Trono Vazio"
+      aria-label="One Piece — abertura"
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         <ArtThroneLayer />
@@ -93,9 +93,9 @@ export function ThroneHero() {
             data-hero-title
             className="font-display text-parchment px-6 text-center text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] opacity-0"
           >
-            O Trono Vazio
-            <span className="text-crimson block text-[0.28em] tracking-[0.42em] uppercase not-italic opacity-80">
-              nunca esteve vazio
+            One Piece
+            <span className="text-crimson block text-[0.2em] tracking-[0.4em] uppercase not-italic opacity-80">
+              a história que o mundo tentou apagar
             </span>
           </h1>
         </div>

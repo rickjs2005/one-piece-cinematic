@@ -4,19 +4,19 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ARCS } from "@/content/arcs";
+import { MOMENTS } from "@/content/moments";
 import { Reveal } from "@/components/ui/Reveal";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * Linha do tempo da saga final.
+ * A jornada, em linha do tempo.
  *
  * A linha vertical carmesim cresce em `scaleY` acompanhando o progresso do
  * scroll dentro da seção — é o único elemento com scrub aqui; o texto entra
  * com o Reveal padrão, que não amarra leitura ao movimento do dedo.
  */
-export function Timeline() {
+export function Moments() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -50,12 +50,12 @@ export function Timeline() {
     <section
       ref={root}
       className="relative px-6 py-32 md:px-16"
-      aria-label="A saga final"
+      aria-label="A jornada"
     >
-      <Reveal className="mb-20">
-        <span className="label-caps text-crimson">O que ainda vem</span>
+      <Reveal className="mx-auto mb-20 max-w-3xl">
+        <span className="label-caps text-crimson">De Loguetown até o fim do mapa</span>
         <h2 className="font-display mt-3 text-[clamp(2rem,5vw,4rem)] leading-none">
-          A Saga Final
+          A Jornada
         </h2>
       </Reveal>
 
@@ -68,27 +68,30 @@ export function Timeline() {
         />
 
         <ol className="space-y-16">
-          {ARCS.map((arc, index) => (
-            <li key={arc.name} className="relative pl-10 md:pl-14">
-              <Reveal delay={index * 0.04}>
+          {MOMENTS.map((moment, index) => (
+            <li key={moment.title} className="relative pl-10 md:pl-14">
+              <Reveal delay={index * 0.03}>
                 <span
                   className={`absolute top-1.5 left-0 h-4 w-4 rounded-full border-2 md:h-[22px] md:w-[22px] ${
-                    arc.unrevealed
+                    moment.ongoing
                       ? "border-mist/40 bg-void"
                       : "border-crimson bg-crimson/25"
                   }`}
                   aria-hidden="true"
                 />
-                <span className="label-caps text-gold">{arc.marker}</span>
+                <div className="flex flex-wrap items-baseline gap-x-4">
+                  <span className="label-caps text-gold">{moment.marker}</span>
+                  <span className="label-caps text-mist/60">{moment.place}</span>
+                </div>
                 <h3 className="font-display mt-2 text-3xl md:text-4xl">
-                  {arc.name}
+                  {moment.title}
                 </h3>
                 <p className="text-parchment/70 mt-3 max-w-xl leading-relaxed">
-                  {arc.description}
+                  {moment.description}
                 </p>
-                {arc.unrevealed && (
+                {moment.ongoing && (
                   <p className="text-mist label-caps mt-4">
-                    Ainda não revelado na obra
+                    Ainda em curso na obra
                   </p>
                 )}
               </Reveal>

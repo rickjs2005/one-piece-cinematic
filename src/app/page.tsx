@@ -1,8 +1,9 @@
 import { ThroneHero } from "@/components/hero/ThroneHero";
 import { Manifesto } from "@/components/sections/Manifesto";
-import { Elders } from "@/components/sections/Elders";
-import { Timeline } from "@/components/sections/Timeline";
-import { Lore } from "@/components/sections/Lore";
+import { Era } from "@/components/sections/Era";
+import { Crew } from "@/components/sections/Crew";
+import { Moments } from "@/components/sections/Moments";
+import { Voices } from "@/components/sections/Voices";
 import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
@@ -10,9 +11,10 @@ export default function Home() {
     <main>
       <ThroneHero />
       <Manifesto />
-      <Elders />
-      <Timeline />
-      <Lore />
+      <Era />
+      <Crew />
+      <Moments />
+      <Voices />
       <Footer />
     </main>
   );

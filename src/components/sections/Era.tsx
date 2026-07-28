@@ -4,19 +4,19 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { LORE } from "@/content/lore";
+import { ERA } from "@/content/era";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * Blocos de lore que se desvendam ao entrar na viewport.
+ * O prólogo: como a Era dos Piratas começou.
  *
  * O texto começa mascarado por `clip-path` e é descoberto de cima para baixo,
  * espelhando a lógica de revelação do hero. O conteúdo está inteiro no HTML —
  * a máscara é puramente visual, então leitores de tela leem tudo desde o
  * primeiro frame.
  */
-export function Lore() {
+export function Era() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -24,11 +24,11 @@ export function Lore() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const blocks = gsap.utils.toArray<HTMLElement>("[data-lore-block]");
+        const blocks = gsap.utils.toArray<HTMLElement>("[data-era-block]");
 
         blocks.forEach((block) => {
           gsap.fromTo(
-            block.querySelector("[data-lore-body]"),
+            block.querySelector("[data-era-body]"),
             { clipPath: "inset(0 0 100% 0)", opacity: 0.15 },
             {
               clipPath: "inset(0 0 0% 0)",
@@ -40,7 +40,7 @@ export function Lore() {
           );
 
           gsap.fromTo(
-            block.querySelector("[data-lore-rule]"),
+            block.querySelector("[data-era-rule]"),
             { scaleX: 0 },
             {
               scaleX: 1,
@@ -62,18 +62,18 @@ export function Lore() {
     <section
       ref={root}
       className="relative px-6 py-32 md:px-16"
-      aria-label="Segredos do mundo"
+      aria-label="A Era dos Piratas"
     >
       <header className="mx-auto mb-20 max-w-3xl">
-        <span className="label-caps text-crimson">Registro proibido</span>
+        <span className="label-caps text-crimson">Como tudo começou</span>
         <h2 className="font-display mt-3 text-[clamp(2rem,5vw,4rem)] leading-none">
-          Segredos do Mundo
+          A Era dos Piratas
         </h2>
       </header>
 
       <div className="mx-auto max-w-3xl space-y-24">
-        {LORE.map((block) => (
-          <article key={block.index} data-lore-block>
+        {ERA.map((block) => (
+          <article key={block.index} data-era-block>
             <div className="flex items-baseline gap-5">
               <span className="font-display text-crimson/60 text-4xl">
                 {block.index}
@@ -83,10 +83,10 @@ export function Lore() {
               </h3>
             </div>
 
-            <div data-lore-rule className="rule-crimson mt-5 mb-6 w-full" />
+            <div data-era-rule className="rule-crimson mt-5 mb-6 w-full" />
 
             <p
-              data-lore-body
+              data-era-body
               className="text-parchment/75 text-lg leading-relaxed"
             >
               {block.body}
