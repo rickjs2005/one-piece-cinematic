@@ -10,6 +10,11 @@
   --color-blood: #e4232c;
   --color-ember: #ff5a3c;
   --color-gold: #f5b740;
+  /* Dois acentos que só as Falas Marcantes usam: cada painel tem uma
+     temperatura própria, e vermelho/ouro sozinhos não davam conta de separar
+     o cinismo do Doflamingo do delírio do Barba Negra. */
+  --color-orchid: #e057b0;
+  --color-violet: #8b6cf0;
   --color-parchment: #f4efe4;
   --color-fog: #8ba0bd;
 
