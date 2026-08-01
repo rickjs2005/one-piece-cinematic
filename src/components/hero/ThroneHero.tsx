@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { applyHeroFinalState, buildHeroTimeline } from "@/lib/hero-timeline";
+import { READY_EVENT } from "@/lib/scroll";
 import { ShotLayer } from "./layers/ShotLayer";
 import eyesShot from "../../../public/art/eyes-dark.webp";
 import throneShot from "../../../public/art/throne-room.webp";
@@ -21,6 +22,37 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  */
 export function ThroneHero() {
   const root = useRef<HTMLElement>(null);
+
+  // O shell (site-shell.tsx) segura o portão fechado até o hero avisar que
+  // tem quadro pra mostrar. Espera o `canplay` do primeiro vídeo interno —
+  // som de "já dá pra tocar sem engasgar" — com um teto de 1,5s: rede lenta
+  // ou `prefers-reduced-motion` (sem <video> nenhum montado) não podem
+  // travar o portão pra sempre.
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+
+    let done = false;
+    const fire = () => {
+      if (done) return;
+      done = true;
+      window.dispatchEvent(new Event(READY_EVENT));
+    };
+
+    const video = el.querySelector<HTMLVideoElement>("video");
+    const timer = window.setTimeout(fire, 1500);
+
+    if (!video || video.readyState >= 3) {
+      fire();
+    } else {
+      video.addEventListener("canplay", fire, { once: true });
+    }
+
+    return () => {
+      window.clearTimeout(timer);
+      video?.removeEventListener("canplay", fire);
+    };
+  }, []);
 
   useGSAP(
     () => {
@@ -72,6 +104,7 @@ export function ThroneHero() {
   return (
     <section
       ref={root}
+      id="topo"
       className="relative h-[400svh]"
       aria-label="One Piece — abertura"
     >
