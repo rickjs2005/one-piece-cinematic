@@ -1,5 +1,5 @@
 import { ChapterSection } from "@/components/chapter";
-import { CrewPanel, MapPanel } from "@/components/chapter-extras";
+import { CrewPanel, MapPanel, MomentsPanel } from "@/components/chapter-extras";
 import { Falas } from "@/components/falas";
 import { Intro } from "@/components/intro";
 import { Nav } from "@/components/nav";
@@ -11,6 +11,10 @@ import { CHAPTERS } from "@/content/chapters";
 const EXTRAS: Record<string, React.ReactNode> = {
   tripulacao: <CrewPanel />,
   rota: <MapPanel />,
+  // Os 8 momentos da jornada (arcos-chave, Loguetown → Egghead) voltam aqui —
+  // conteúdo restaurado do commit que os removeu, promessa da spec de que
+  // "nenhum conteúdo textual se perde" no port pro molde terral.
+  guerras: <MomentsPanel />,
 };
 
 export default function Home() {

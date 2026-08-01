@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CREW } from "@/content/crew";
+import { MOMENTS } from "@/content/moments";
 import { ROUTE, ROUTE_PATH, SEAS, WORLD } from "@/content/route";
 
 /* --------------------------------------------------------------------------
@@ -44,6 +45,57 @@ export function CrewPanel() {
           >
             {mate.role} · {mate.dream}
           </p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Os oito momentos da jornada — grade estática, sem GSAP/ScrollTrigger
+ * próprio (mesma regra do CrewPanel e do MapPanel: nada aqui pode animar por
+ * conta própria dentro de uma faixa fixada). Duas fileiras de 4 no desktop —
+ * com 8 cards numa fileira só o painel de 100vw ganharia um scroller
+ * aninhado, que é exatamente o que a spec proíbe.
+ *
+ * Todos os 8 momentos têm arte própria (`public/art/moment-*.webp`, sete
+ * arquivos, mais `execution.webp` reaproveitado do capítulo 01 pro primeiro
+ * momento — a mesma cena, a execução de Roger). `line-clamp` na descrição
+ * garante que nenhum card estoura a altura do painel mesmo quando o texto
+ * de um momento é mais longo que o de outro.
+ */
+export function MomentsPanel() {
+  return (
+    <div className="grid w-full grid-cols-2 gap-x-[1.4rem] gap-y-[1.8rem] sm:grid-cols-4">
+      {MOMENTS.map((moment) => (
+        <article key={moment.title} className="flex flex-col gap-[0.5rem]">
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image
+              src={moment.scene}
+              alt=""
+              fill
+              sizes="(max-width: 991px) 45vw, 22vw"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <p className="t-micro ink-faint">
+              {moment.marker} · {moment.place}
+              {moment.ongoing && <span className="normal-case"> · em curso</span>}
+            </p>
+            <p
+              className="t-cap ink-soft mt-[0.25rem] truncate font-semibold"
+              style={{ fontSize: "0.8rem" }}
+            >
+              {moment.title}
+            </p>
+            <p
+              className="line-clamp-3 mt-[0.25rem] text-cream/55"
+              style={{ fontSize: "0.66rem", lineHeight: 1.35 }}
+            >
+              {moment.description}
+            </p>
+          </div>
         </article>
       ))}
     </div>
