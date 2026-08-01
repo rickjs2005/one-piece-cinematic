@@ -80,7 +80,7 @@ export const MOMENTS: Moment[] = [
     place: "Egghead · Elbaf",
     title: "O fim do mapa",
     description:
-      "A ilha do futuro, a terra dos gigantes, e o Século Vazio esperando no fim da linha. Falta pouco para o mundo descobrir quem está sentado no trono.",
+      "A ilha do futuro e Elbaf, onde o príncipe Loki carrega uma maldição acorrentada. No fundo do Século Vazio, o nome que o mundo tentou apagar — Rocks D. Xebec — espera ser lembrado.",
     scene: egghead,
     ongoing: true,
   },

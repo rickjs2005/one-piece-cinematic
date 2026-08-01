@@ -326,8 +326,46 @@ export function MapPanel() {
           NOVO MUNDO
         </text>
 
+        {/* God Valley — a ilha que o Governo apagou dos mapas depois da queda
+            de Rocks D. Xebec. Fora da rota de propósito: ninguém navega até
+            um lugar que oficialmente não existe. Marco fantasma, tracejado,
+            encostado no Calm Belt. */}
+        {/* y=150: alto o bastante pra legenda não encostar no rótulo de
+            Thriller Bark (que vive em ~191), dentro do Calm Belt de cima. */}
+        <g transform="translate(645 150)" opacity="0.75">
+          <circle
+            r="7"
+            fill="none"
+            stroke="var(--color-blood)"
+            strokeOpacity="0.65"
+            strokeWidth="1.4"
+            strokeDasharray="3 4"
+          />
+          <text
+            y="-13"
+            textAnchor="middle"
+            fill="var(--color-fog)"
+            fillOpacity="0.8"
+            fontSize="10"
+            letterSpacing="1"
+          >
+            God Valley
+          </text>
+          <text
+            y="19"
+            textAnchor="middle"
+            fill="var(--color-blood)"
+            fillOpacity="0.6"
+            fontSize="8.5"
+            letterSpacing="1"
+          >
+            Apagada dos mapas — Rocks D. Xebec
+          </text>
+        </g>
+
         {/* A rota — já inteira e traçada, sem draw-on-scroll. */}
         <path
+          id="rota-path"
           d={ROUTE_PATH}
           fill="none"
           stroke="url(#routeInk)"
@@ -374,9 +412,29 @@ export function MapPanel() {
           </g>
         ))}
 
-        {/* Navio parado no fim da rota — Laugh Tale, sem confirmar nada. */}
-        <g transform={`translate(${ROUTE[ROUTE.length - 1].x} ${ROUTE[ROUTE.length - 1].y - 14})`}>
-          <path d="M 0 -7 L 5.5 5.5 L 0 2.5 L -5.5 5.5 Z" fill="var(--color-parchment)" />
+        {/* O navio NAVEGA a rota: a timeline do capítulo (chapter.tsx) o leva
+            de Vila Foosha a Laugh Tale via MotionPath, amarrado ao mesmo
+            scrub de tudo — nada aqui tem trigger próprio. O transform inicial
+            o deixa ATRACADO no ponto de partida: é onde ele fica no mobile,
+            no reduced-motion e antes do JS assumir. */}
+        <g
+          className="map-ship"
+          transform={`translate(${ROUTE[0].x} ${ROUTE[0].y})`}
+        >
+          <circle r="9" fill="var(--color-surf)" fillOpacity="0.14" />
+          <path
+            d="M -6 2.5 Q 0 6.5 6 2.5 L 4.2 0.5 H -4.2 Z"
+            fill="var(--color-parchment)"
+          />
+          <line
+            x1="0"
+            y1="0.5"
+            x2="0"
+            y2="-7.5"
+            stroke="var(--color-parchment)"
+            strokeWidth="1.1"
+          />
+          <path d="M 0 -7.5 Q 5.5 -4 0 -0.5 Z" fill="var(--color-gold)" />
         </g>
       </svg>
     </div>

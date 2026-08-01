@@ -71,8 +71,13 @@ export const ROUTE: Island[] = [
   { id: "wholecake", name: "Whole Cake", x: 868, y: 200 },
   // Sem legenda: no aperto do Novo Mundo ela caía em cima de Laugh Tale, e
   // esse contexto já é contado por extenso na seção da Jornada.
-  { id: "wano", name: "Wano", x: 904, y: 232, major: true, below: true },
-  { id: "egghead", name: "Egghead", x: 938, y: 202 },
+  // O fim da rota alterna rótulos acima/abaixo em passos de ~24px — com
+  // Elbaf inserida, qualquer par de vizinhos no mesmo lado colidiria.
+  { id: "wano", name: "Wano", x: 898, y: 232, major: true, below: true },
+  { id: "egghead", name: "Egghead", x: 920, y: 202 },
+  // A saga em curso: a terra dos gigantes. O príncipe Loki é citado por
+  // extenso no momento "O fim do mapa" — aqui só o marco, o canto é apertado.
+  { id: "elbaf", name: "Elbaf", x: 944, y: 235, major: true },
   { id: "laughtale", name: "Laugh Tale", note: "Não revelado", x: 968, y: 230, major: true, below: true },
 ];
 

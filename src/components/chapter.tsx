@@ -2,6 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -10,7 +11,7 @@ import { setNavColor } from "@/lib/nav-color";
 import { splitText } from "@/lib/split";
 import { SvgWord } from "./svg-word";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, useGSAP);
 
 /* --------------------------------------------------------------------------
    Geometria da faixa. Os três painéis somam 380vw e a seção fica fixada
@@ -606,6 +607,30 @@ export function ChapterSection({
           q(".ch-num-layer"),
           { y: 0 },
           { y: "-6rem", ease: "none", duration: px(total) },
+          0,
+        );
+      }
+
+      // O navio do MapPanel NAVEGA a rota inteira ao longo do capítulo:
+      // zarpa de Vila Foosha quando o pin começa e atraca em Laugh Tale
+      // quando ele solta. Dirigido por ESTA timeline (regra da casa: nada
+      // dentro da faixa tem trigger próprio) — quem rola devagar vê o
+      // mergulho na Ilha dos Homens-Peixe acontecer no meio do caminho.
+      // `align` recoloca o navio no início do path, então o transform
+      // inicial (atracado, para mobile/reduced) não interfere.
+      const mapShip = q(".map-ship")[0];
+      if (mapShip) {
+        tl.to(
+          mapShip,
+          {
+            motionPath: {
+              path: "#rota-path",
+              align: "#rota-path",
+              alignOrigin: [0.5, 0.5],
+            },
+            ease: "none",
+            duration: px(total),
+          },
           0,
         );
       }
