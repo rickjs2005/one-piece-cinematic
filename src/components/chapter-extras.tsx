@@ -34,16 +34,20 @@ export function CrewPanel() {
            existia; texto vivo (nada de arte gerada com texto embutido). */
         <article
           key={mate.id}
-          className="w-[9rem] shrink-0 px-[0.55rem] pt-[0.5rem] pb-[0.45rem] text-center shadow-[0_0.4rem_1rem_rgb(0_0_0/0.35)]"
-          style={{
-            background:
-              "linear-gradient(160deg, #efe3c0 0%, #e6d5a8 55%, #d9c48f 100%)",
-            border: "1px solid #8a6f3f",
-            outline: "1px solid rgb(59 42 24 / 0.55)",
-            outlineOffset: "-0.28rem",
-            color: "#3b2a18",
-            transform: `rotate(${i % 2 === 0 ? -0.7 : 0.7}deg)`,
-          }}
+          className="wanted-card w-[9rem] shrink-0 px-[0.55rem] pt-[0.5rem] pb-[0.45rem] text-center shadow-[0_0.4rem_1rem_rgb(0_0_0/0.35)]"
+          style={
+            {
+              background:
+                "linear-gradient(160deg, #efe3c0 0%, #e6d5a8 55%, #d9c48f 100%)",
+              border: "1px solid #8a6f3f",
+              outline: "1px solid rgb(59 42 24 / 0.55)",
+              outlineOffset: "-0.28rem",
+              color: "#3b2a18",
+              // a inclinação vive numa var pra que o hover (globals.css)
+              // possa endireitar o cartaz sem brigar com o estilo inline
+              "--tilt": `${i % 2 === 0 ? -0.7 : 0.7}deg`,
+            } as React.CSSProperties
+          }
         >
           <p
             className="leading-none"
@@ -85,7 +89,7 @@ export function CrewPanel() {
             {mate.name}
           </p>
           <p
-            className="t-nums mt-[0.3rem] leading-none font-bold"
+            className="wanted-bounty t-nums mt-[0.3rem] leading-none font-bold"
             style={{ fontSize: "0.72rem" }}
           >
             {/* ฿ é o símbolo do Berry nos cartazes da obra */}

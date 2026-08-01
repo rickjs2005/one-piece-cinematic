@@ -1182,6 +1182,11 @@ button:not(:disabled),
   background: var(--color-coal);
 }
 
+/* A classe mora no PRÓPRIO <text> (letterClassName do SvgWord), não num
+   wrapper — o seletor de descendente do terral (`.loader-mark text`) nunca
+   casava e a marca ficava invisível o loader inteiro (visto em captura:
+   três rodadas de screenshot sem nome nenhum). Seletor direto + o legado. */
+text.loader-mark,
 .loader-mark path,
 .loader-mark text {
   fill: var(--color-gold);
@@ -1235,6 +1240,53 @@ button:not(:disabled),
   transform: scaleX(0);
   transform-origin: left center;
   background: linear-gradient(90deg, #3b2a17, var(--color-gold));
+}
+
+/* --------------------------------------------------------------------------
+   Cartazes de procurado (CrewPanel) — papel que reage à mão.
+
+   Em repouso cada cartaz fica torto (--tilt vem do inline style, alternando
+   ±0.7°: mural, não interface). No hover ele se ENDIREITA, descola do mural
+   (perspective + rotateX + sombra funda) e o retrato PERDE o sépia — o
+   procurado ganha cor, como se o cartaz virasse a pessoa por um instante.
+   A recompensa carimba em vermelho-sangue junto. Só em pointer fino: no
+   touch não existe hover e o estado torto é o final.
+   -------------------------------------------------------------------------- */
+.wanted-card {
+  transform: rotate(var(--tilt, 0deg));
+  transition:
+    transform 0.45s var(--ease-default),
+    box-shadow 0.45s var(--ease-default);
+}
+
+.wanted-card img {
+  transition: filter 0.5s ease;
+}
+
+.wanted-bounty {
+  transition:
+    color 0.35s ease,
+    transform 0.35s var(--ease-default);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wanted-card:hover {
+    position: relative;
+    z-index: 2;
+    transform: perspective(40rem) rotate(0deg) rotateX(4deg) translateY(-0.45rem)
+      scale(1.05);
+    box-shadow: 0 1.3rem 2.4rem rgb(0 0 0 / 0.5);
+  }
+
+  /* !important porque o sépia mora no style inline do <Image> */
+  .wanted-card:hover img {
+    filter: none !important;
+  }
+
+  .wanted-card:hover .wanted-bounty {
+    color: #9c1f14;
+    transform: scale(1.12);
+  }
 }
 
 /* ==========================================================================
