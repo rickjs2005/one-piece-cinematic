@@ -91,7 +91,9 @@ const PROOFS = [
   },
   {
     key: "ilustracoes",
-    title: "33 ilustrações",
+    // 32, não 33: contagem real de `public/art/*.webp` (crew, momentos,
+    // falas, execução, o resto do elenco de cenas).
+    title: "32 ilustrações",
     sub: "Geradas por IA, inspiradas na obra",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
