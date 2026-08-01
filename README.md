@@ -1,9 +1,9 @@
 # One Piece — A história que o mundo tentou apagar
 
 Peça cinematográfica de página única sobre a história de One Piece. Uma cena
-controlada pelo scroll abre o site, e a partir dela a página conta a jornada:
-como a Era dos Piratas começou, quem são os Chapéus de Palha, a rota até o fim
-do mapa, os momentos que marcaram e as falas que ficaram.
+controlada pelo scroll abre o site, e a partir dela a página conta a jornada em
+cinco capítulos — Execução, Tripulação, Rota, Guerras, Amanhecer — fechando
+com uma vitrine das falas que ficaram.
 
 Projeto de demonstração. Sem vínculo com os detentores dos direitos da obra.
 
@@ -36,20 +36,27 @@ npm run build && npm run start
 ## Estrutura
 
 ```
-src/app/                 layout, página, tokens de cor e tipografia
-src/components/hero/     a cena de abertura e suas camadas
-src/components/sections/ Manifesto, Era, Crew, FlagReveal, Rota, Jornada, Falas
-src/components/ui/       Preloader, Marquee, Reveal, ParallaxBackdrop
-src/content/             todo o texto e os dados, separados dos componentes
-src/lib/                 timeline do hero e integração Lenis + ScrollTrigger
-scripts/                 utilitário que reduz as artes ao tamanho de uso
-public/art/              33 ilustrações
-public/video/            2 planos do hero
-docs/superpowers/specs/  o documento de design que originou o projeto
+src/app/                    home, /laugh-tale (a recompensa do SEGURE), tokens de cor e tipografia
+src/components/hero/        ThroneHero — a cena de abertura — e suas camadas (ShotLayer)
+src/components/chapter.tsx  ChapterSection — a faixa horizontal fixa de cada capítulo
+src/components/chapter-extras.tsx  CrewPanel e MapPanel, os painéis extras de dois capítulos
+src/components/intro.tsx    o manifesto de abertura
+src/components/falas.tsx    a vitrine editorial das falas
+src/components/site-shell.tsx, loader.tsx, nav.tsx, site-footer.tsx  casca do site
+src/content/                os 5 capítulos, a tripulação, a rota e as falas
+src/lib/                    timeline do hero, Lenis + ScrollTrigger, reveals, split de texto
+scripts/                    utilitário que reduz as artes ao tamanho de uso
+public/art/                 ilustrações do manifesto e da vitrine de falas
+public/shot/                fotos por capítulo (execucao, tripulacao, rota, guerras, amanhecer, cutout)
+public/video/               2 planos do hero
+public/laugh-tale/          o wallpaper da página secreta
+docs/superpowers/specs/     os documentos de design que originaram o projeto
 ```
 
-Todo o texto vive em `src/content/`. Trocar uma fala, uma ilha da rota ou um
-tripulante não exige tocar em componente nenhum.
+Cada capítulo é uma entrada em `CHAPTERS` (`src/content/chapters.ts`), renderizada
+pelo mesmo `ChapterSection` em `src/app/page.tsx`. Trocar uma fala, uma ilha da
+rota ou um tripulante não exige tocar em componente nenhum — só no conteúdo em
+`src/content/`.
 
 ## Decisões que valem saber
 
@@ -59,8 +66,9 @@ não depende de remedição depois que as imagens carregam.
 
 **O Lenis só emite evento para o scroll que ele mesmo conduz.** Um scroll
 programático — âncora, tecla Home, restauração de posição ao recarregar —
-deixaria o ScrollTrigger com a posição antiga, então há um listener nativo de
-`scroll` como rede de segurança em `src/lib/smooth-scroll.tsx`.
+deixaria o ScrollTrigger com a posição antiga, então `src/lib/scroll.ts`
+centraliza a instância única (`getLenis`/`setLenis`) e expõe `scrollToId`, que
+sabe cair para `scrollIntoView` nativo quando o Lenis ainda não montou.
 
 **As artes são reduzidas ao tamanho em que aparecem** (`scripts/downscale-art.mjs`).
 Em 2K a página travava o renderizador do Chrome. Se novas artes forem
