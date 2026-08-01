@@ -73,8 +73,21 @@ export function SvgWord({
       if (!letters.length) return;
 
       // 1. encadeia os glifos medindo um a um
+      //
+      // Espaço não vira <text> (ver render mais abaixo — SVG colapsa
+      // whitespace e getComputedTextLength() de um espaço dá 0, então
+      // "ONE PIECE" virava "ONEPIECE"). Aqui só se avança `x` por um vão
+      // fixo quando o caractere original era espaço; `letters` (a lista de
+      // glifos de verdade) e o índice de percurso andam separados.
       let x = 0;
-      for (const letter of letters) {
+      let letterIndex = 0;
+      for (const char of chars) {
+        if (char === " ") {
+          x += SIZE * 0.26 + SIZE * tracking;
+          continue;
+        }
+        const letter = letters[letterIndex];
+        letterIndex += 1;
         letter.setAttribute("x", String(x));
         x += letter.getComputedTextLength() + SIZE * tracking;
       }
@@ -127,20 +140,26 @@ export function SvgWord({
     >
       {title && <title>{title}</title>}
       <g ref={groupRef}>
-        {chars.map((char, i) => (
-          <text
-            key={`${char}-${i}`}
-            className={letterClassName}
-            x={0}
-            y={0}
-            fontSize={SIZE}
-            fontFamily="var(--font-display), Impact, sans-serif"
-            fontWeight={400}
-            strokeWidth={strokeWidth}
-          >
-            {char}
-          </text>
-        ))}
+        {chars.map((char, i) =>
+          // Espaço não renderiza <text>: um glifo vazio de espaço entraria
+          // na lista `letters` e quebraria a stagger de quem anima
+          // stroke-dash por letra (loader, títulos de capítulo, rodapé).
+          // O vão fica a cargo do `layout()` acima.
+          char === " " ? null : (
+            <text
+              key={`${char}-${i}`}
+              className={letterClassName}
+              x={0}
+              y={0}
+              fontSize={SIZE}
+              fontFamily="var(--font-display), Impact, sans-serif"
+              fontWeight={400}
+              strokeWidth={strokeWidth}
+            >
+              {char}
+            </text>
+          ),
+        )}
       </g>
     </svg>
   );

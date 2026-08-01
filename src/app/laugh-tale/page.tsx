@@ -120,7 +120,7 @@ export default function LaughTale() {
           <div className="mt-[2.6rem] inline-block border-y border-[var(--color-gold)]/35 py-[1.5rem]">
             <p className="t-micro text-cream/40">O que está aqui</p>
             <p className="t-big mt-[0.7rem] text-[var(--color-gold)]">
-              « O One Piece é real. »
+              <span className="whitespace-nowrap">« O One Piece é real. »</span>
             </p>
           </div>
 
