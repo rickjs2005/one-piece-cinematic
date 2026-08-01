@@ -844,25 +844,30 @@ h4 {
   }
 }
 
-/* Luz própria de cada campo — a direção conta a história do capítulo. */
+/* Luz própria de cada campo — a direção conta a história do capítulo.
+   Herdadas do TERRAL (torrefação): verde de montanha na execução e laranja
+   de fornalha na rota eram a temperatura do CAFÉ, não da cena de One Piece —
+   recalibradas abaixo pra temperatura de cada capítulo. */
 .chapter[data-chapter="execucao"]::before {
-  /* manhã fria descendo por cima da serra */
+  /* aço frio azulado — a lâmina e a chuva de Loguetown, não a serra do café */
   background:
-    radial-gradient(60% 55% at 24% 8%, rgb(220 236 205 / 0.22), transparent 65%),
-    linear-gradient(200deg, rgb(213 227 162 / 0.1) 0%, transparent 45%);
+    radial-gradient(60% 55% at 24% 8%, rgb(196 214 232 / 0.22), transparent 65%),
+    linear-gradient(200deg, rgb(170 196 224 / 0.1) 0%, transparent 45%);
 }
 .chapter[data-chapter="tripulacao"]::before {
-  /* sol a pino, quase branco no zênite */
+  /* sol a pino, quase branco no zênite — mantido do terreiro, já é a
+     temperatura certa pro convés ao meio-dia */
   background: radial-gradient(70% 55% at 50% -12%, rgb(255 226 158 / 0.4), transparent 65%);
 }
 .chapter[data-chapter="rota"]::before {
-  /* a brasa vem de BAIXO — luz de fornalha */
+  /* água fria da Grand Line — a brasa de fornalha virou o azul do mar que
+     enlouquece bússola, luz vindo de baixo como reflexo de água */
   background:
-    radial-gradient(65% 50% at 50% 108%, rgb(255 128 60 / 0.3), transparent 65%),
-    radial-gradient(40% 40% at 22% 90%, rgb(255 100 40 / 0.16), transparent 70%);
+    radial-gradient(65% 50% at 50% 108%, rgb(90 190 224 / 0.3), transparent 65%),
+    radial-gradient(40% 40% at 22% 90%, rgb(60 150 210 / 0.18), transparent 70%);
 }
 .chapter[data-chapter="guerras"]::before {
-  /* uma lâmpada de bancada, baixa e lateral */
+  /* brasa de bancada — mantida: já é a temperatura certa pro capítulo */
   background: radial-gradient(50% 65% at 8% 62%, rgb(224 164 104 / 0.26), transparent 65%);
 }
 
