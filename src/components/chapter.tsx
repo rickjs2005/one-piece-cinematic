@@ -32,13 +32,26 @@ const PRE = 2200; // px de scroll de coreografia parada
 const PAUSE = 1300; // px de scroll com o horizontal congelado
 
 /**
- * Fração do horizontal já percorrida quando a faixa congela.
+ * Fração do horizontal já percorrida quando a faixa congela — FALLBACK.
  *
- * Não é número redondo por acaso: a faixa tem 380vw e a tela 100vw, então o
- * curso total é 280vw. O painel de mídia ocupa de 250vw a 380vw, ou seja, ele
- * cobre a tela inteira a partir de 250vw de curso — 250/280 = 0,893. Parar em
- * 0,90 garante que a pausa (e a abertura do clip-path) aconteça com a foto já
- * ocupando tudo, e ainda sobram 28vw pra ela deslizar depois.
+ * Não é número redondo por acaso: pra um capítulo SEM painel extra a faixa
+ * tem 380vw e a tela 100vw, então o curso total é 280vw. O painel de mídia
+ * ocupa de 250vw a 380vw, ou seja, ele cobre a tela inteira a partir de
+ * 250vw de curso — 250/280 = 0,893. Essa constante existia porque 0,90
+ * aproxima esse valor com uma pequena folga.
+ *
+ * Só que capítulos com painel extra (tripulacao, rota, guerras) somam 480vw,
+ * não 380vw — o painel de mídia só começa em 350vw e o curso vira 380vw, ou
+ * seja o split real é 350/380 ≈ 0,923, bem longe do 0,90 cravado. Com o
+ * valor fixo, a pausa chegava CEDO DEMAIS nesses capítulos: o clip-path
+ * abria e a foto entrava em tela cheia antes do painel de mídia de fato
+ * estar lá — a "pausa" caía sobre o painel extra ou sobre o fim do
+ * corredor, não sobre a mídia.
+ *
+ * Por isso o split abaixo é MEDIDO (`mediaPanel.offsetLeft / overflow`) e
+ * não mais cravado — esta constante só sobra como fallback caso o seletor
+ * não encontre `.panel-media` (não deveria acontecer, mas evita dividir por
+ * um valor incoerente) e como registro do número histórico.
  */
 const SPLIT = 0.9;
 
@@ -461,7 +474,15 @@ export function ChapterSection({
       const overflow = track.scrollWidth - window.innerWidth;
       if (overflow <= 0) return;
 
-      const A = overflow * SPLIT;
+      // O ponto do congelamento é MEDIDO, não cravado: `.panel-media` é filho
+      // direto de `.chapter-track` (que tem `position: relative`, ver
+      // globals.css), então `offsetLeft` é exatamente a largura acumulada de
+      // tudo o que vem antes dele — 380vw sem extra, 480vw com. Dividido pelo
+      // overflow real, isso dá o split exato pra QUALQUER combinação de
+      // painéis, sem precisar prever cada largura na mão.
+      const mediaPanel = q(".panel-media")[0] as HTMLElement | undefined;
+      const split = mediaPanel ? Math.min(1, mediaPanel.offsetLeft / overflow) : SPLIT;
+      const A = overflow * split;
       const B = overflow - A;
       const total = PRE + A + PAUSE + B;
 
@@ -641,6 +662,36 @@ export function ChapterSection({
       // carrega a cor no elemento (o splitter achataria um <span> interno).
       // A manchete ENTRA quando a primeira parede domina a tela e SAI quando
       // ela cede lugar à segunda — janela generosa, sempre inteira.
+      // Janelas da manchete/lead como fração de A.
+      //
+      // Nos capítulos SEM painel extra os números abaixo são os originais,
+      // calibrados por captura real (comentários históricos logo adiante):
+      // manchete entra em 0,375·A e sai em 0,70·A; lead entra em 0,755·A e
+      // sai em 0,9·A.
+      //
+      // Nos capítulos COM painel extra (tripulacao, rota, guerras) o extra
+      // ocupa ~0,667→0,923 do curso total — e como agora A === o offsetLeft
+      // do painel de mídia (ver split acima), isso equivale a cerca de
+      // 0,70→1,0 de A. As janelas antigas (que iam até ~0,73·A e ~0,935·A)
+      // invadiam esse intervalo: a manchete/lead — fixas na tela, por cima de
+      // QUALQUER conteúdo que o horizontal esteja mostrando atrás — ainda
+      // estavam em cena quando o painel extra (CrewPanel/MapPanel/
+      // MomentsPanel) começava a entrar, e o texto colidia visualmente com a
+      // grade. A mesma coreografia interna (fade-in, stagger de letras,
+      // fade-out) só é deslocada mais cedo, terminando bem antes do extra.
+      const hasExtra = Boolean(extra);
+      const HL_IN = hasExtra ? 0.3 : 0.375;
+      const HL_CHARS_IN = hasExtra ? 0.305 : 0.38;
+      const HL_LINE_OFFSET = hasExtra ? 0.003 : 0.004;
+      const HL_CHARS_DUR = hasExtra ? 0.01 : 0.012;
+      const HL_FADE_OUT = hasExtra ? 0.52 : 0.7;
+      const HL_FADE_DUR = hasExtra ? 0.025 : 0.03;
+      const LEAD_IN = hasExtra ? 0.56 : 0.755;
+      const LEAD_WORDS_IN = hasExtra ? 0.565 : 0.76;
+      const LEAD_WORDS_DUR = hasExtra ? 0.05 : 0.07;
+      const LEAD_FADE_OUT = hasExtra ? 0.64 : 0.9;
+      const LEAD_FADE_DUR = hasExtra ? 0.018 : 0.035;
+
       const heads = q(".ch-head") as HTMLElement[];
       const headSplits = heads.map((h) => splitText(h, "chars"));
       // 0,36 e não 0,16: a faixa tem ~390vw e o painel 1 ocupa os primeiros
@@ -654,7 +705,7 @@ export function ChapterSection({
       // A caixa acende no MESMO ponto em que as letras começam a subir. Havia
       // uma fresta de A*0,02 em que o bloco já estava visível e as letras
       // ainda deitadas atrás da máscara — 99px de scroll de texto invisível.
-      tl.to(q(".ch-headline"), { opacity: 1, duration: px(A * 0.008) }, px(PRE + A * 0.375));
+      tl.to(q(".ch-headline"), { opacity: 1, duration: px(A * 0.008) }, px(PRE + A * HL_IN));
       for (const [i, h] of heads.entries()) {
         h.classList.add("is-ready");
         const chars = headSplits[i].chars;
@@ -669,18 +720,18 @@ export function ChapterSection({
               // disso, 23% do percurso amostrado pegava a manchete no meio
               // da subida — letra cortada pela máscara, que é exatamente a
               // meia-palavra reclamada.
-              duration: px(A * 0.012),
+              duration: px(A * HL_CHARS_DUR),
               stagger: px(A * 0.0005),
               ease: "expo.out",
             },
-            px(PRE + A * 0.38) + i * px(A * 0.004),
+            px(PRE + A * HL_CHARS_IN) + i * px(A * HL_LINE_OFFSET),
           );
         }
       }
       tl.to(
         q(".ch-headline"),
-        { opacity: 0, y: "-3svh", duration: px(A * 0.03), ease: "power2.in" },
-        px(PRE + A * 0.70),
+        { opacity: 0, y: "-3svh", duration: px(A * HL_FADE_DUR), ease: "power2.in" },
+        px(PRE + A * HL_FADE_OUT),
       );
       // SEM blur aqui, de propósito. Blur amarrado a scrub fica parado no
       // meio quando o usuário rola devagar — e texto borrado estático lê
@@ -693,19 +744,19 @@ export function ChapterSection({
       const lead = q(".ch-lead")[0] as HTMLElement;
       const leadSplit = splitText(lead, "words");
       lead.classList.add("is-ready");
-      tl.to(q(".ch-leadbox"), { opacity: 1, duration: px(A * 0.008) }, px(PRE + A * 0.755));
+      tl.to(q(".ch-leadbox"), { opacity: 1, duration: px(A * 0.008) }, px(PRE + A * LEAD_IN));
       if (leadSplit.words.length) {
         tl.fromTo(
           leadSplit.words,
           { opacity: 0.14 },
-          { opacity: 1, ease: "none", duration: px(A * 0.07), stagger: px(A * 0.002) },
-          px(PRE + A * 0.76),
+          { opacity: 1, ease: "none", duration: px(A * LEAD_WORDS_DUR), stagger: px(A * 0.002) },
+          px(PRE + A * LEAD_WORDS_IN),
         );
       }
       tl.to(
         q(".ch-leadbox"),
-        { opacity: 0, y: "-2svh", duration: px(A * 0.035), ease: "power2.in" },
-        px(PRE + A * 0.9),
+        { opacity: 0, y: "-2svh", duration: px(A * LEAD_FADE_DUR), ease: "power2.in" },
+        px(PRE + A * LEAD_FADE_OUT),
       );
 
       /* ---- 3. A PAUSA: o horizontal congela e a foto abre -------------- */
