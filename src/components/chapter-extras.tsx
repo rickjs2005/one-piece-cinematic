@@ -243,9 +243,16 @@ export function MapPanel() {
               {island.name}
             </text>
             {island.major && island.note && (
+              // Ilhas perto da borda esquerda do viewBox (Vila Foosha, x=55)
+              // cortavam a legenda: texto centralizado por x=55 com ~19
+              // caracteres de largura ultrapassa x=0 do lado esquerdo e o SVG
+              // recorta o que sai do viewBox. Perto da borda, ancora pela
+              // esquerda e desloca o rótulo pra a direita do marco em vez de
+              // centralizar nele — dá folga sem mexer no viewBox inteiro.
               <text
+                x={island.x < 70 ? 10 : 0}
                 y={island.below ? 30 : 17}
-                textAnchor="middle"
+                textAnchor={island.x < 70 ? "start" : "middle"}
                 fill="var(--color-fog)"
                 fontSize="9"
                 letterSpacing="1"
