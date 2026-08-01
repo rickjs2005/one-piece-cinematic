@@ -88,13 +88,6 @@ type SceneSpec = {
   air?: "mist" | "rays" | "embers" | "grounds";
   /** bloco poético */
   block: { side: "left" | "right"; icon: string; copy: React.ReactNode };
-  /**
-   * Diálogo encenado no centro-baixo do painel de abertura — só a EXECUÇÃO
-   * usa: a pergunta da multidão e a resposta que abriu a era. Entra pela
-   * timeline quando o título do capítulo se dissolve (segunda batida da
-   * abertura: nome → fala).
-   */
-  dialogo?: { pergunta: string; resposta: string; quem: string };
 };
 
 /** ícones de traço (paths 24×24) — os mesmos glifos do índice da nav */
@@ -133,14 +126,6 @@ const SCENES: Record<string, SceneSpec> = {
           <em className="voice">um convite</em> — e o mundo inteiro aceitou.
         </>
       ),
-    },
-    // A resposta é a mesma fala canônica da vitrine (voices.ts) — uma voz
-    // só no site inteiro, acrescida do "deixei tudo lá" do cadafalso.
-    dialogo: {
-      pergunta: "— O One Piece… o tesouro dele existe mesmo?!",
-      resposta:
-        "Minhas riquezas? Se quiserem, podem pegar. Procurem! Eu deixei tudo naquele lugar.",
-      quem: "Gol D. Roger — e a Grande Era dos Piratas começou",
     },
   },
   tripulacao: {
@@ -362,24 +347,6 @@ function ChapterScene({ chapter }: { chapter: Chapter }) {
         <p className="t-body ink-soft mt-[1.1rem]">{scene.block.copy}</p>
       </div>
 
-      {/* O diálogo do cadafalso — a segunda batida da abertura. Nasce
-          invisível e a timeline o revela quando o título se dissolve; a
-          posição centro-baixo não disputa com o bloco poético (direita) nem
-          com o rótulo do numeral (esquerda). No reduced-motion o título não
-          sai de cena, então o diálogo apenas coexiste embaixo. */}
-      {scene.dialogo && (
-        <div className="ch-dialogo absolute inset-x-0 bottom-[15vh] z-[3] mx-auto max-w-[30rem] text-center opacity-0">
-          <p className="t-micro ink-soft">{scene.dialogo.pergunta}</p>
-          <p
-            className="voice mt-[0.85rem] text-[1.35rem] leading-[1.32]"
-            style={{ color: accent }}
-          >
-            “{scene.dialogo.resposta}”
-          </p>
-          <p className="t-micro ink-faint mt-[0.85rem]">{scene.dialogo.quem}</p>
-        </div>
-      )}
-
       {/* o objeto da cena */}
       <div className="x-cup z-[2]" style={scene.obj.style}>
         {scene.steam && (
@@ -483,9 +450,9 @@ export function ChapterSection({
         gsap.set(q(".chapter-veil"), { opacity: 1 });
         // a legenda do travelling não existe empilhada (é `hidden lg:block`),
         // mas sem movimento no desktop ela precisa nascer visível
-        gsap.set([...q(".ch-headline"), ...q(".ch-leadbox")], { opacity: 1 });
-        // idem o diálogo do cadafalso: sem timeline, nasce visível
-        gsap.set(q(".ch-dialogo"), { opacity: 1 });
+        gsap.set([...q(".ch-headline"), ...q(".ch-leadbox"), ...q(".ch-finale")], {
+          opacity: 1,
+        });
 
         // Sem movimento: fica no poster. Movimento é justamente o que a
         // pessoa pediu pra não ter.
@@ -597,18 +564,6 @@ export function ChapterSection({
           px(1500),
         )
         .to(q(".ch-title"), { opacity: 0, duration: px(550), ease: "power2.in" }, px(1750));
-
-      // A segunda batida da abertura: o nome sai, a FALA entra. Só existe
-      // na EXECUÇÃO (o diálogo do cadafalso) — nos outros capítulos o
-      // seletor volta vazio e nada acontece.
-      if (q(".ch-dialogo").length) {
-        tl.fromTo(
-          q(".ch-dialogo"),
-          { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, duration: px(500), ease: "power2.out" },
-          px(1900),
-        );
-      }
 
       /* ---- 1b. camadas da cena e paralaxe de fundo --------------------- */
 
@@ -851,17 +806,37 @@ export function ChapterSection({
         );
 
       /* ---- 4. horizontal, resto: a foto desliza e os dados sobem ------- */
-      tl.to(track, { x: -(A + B), ease: "none", duration: px(B) }, px(PRE + A + PAUSE)).fromTo(
-        q(".ch-stats"),
-        { yPercent: 120 },
-        // Duração amarrada a PAUSE e B, nunca fixa: um valor cravado (1500px)
-        // estoura o fim da timeline em telas largas, e como o ScrollTrigger
-        // mapeia o scroll pela duração TOTAL, tudo encolhe junto — o
-        // horizontal deixa de chegar ao fim dentro do pin. Terminar
-        // exatamente em `total` é o que mantém o mapeamento honesto.
-        { yPercent: 0, duration: px(PAUSE * 0.35), ease: "power2.out" },
-        px(PRE + A + PAUSE * 0.3),
-      );
+      tl.to(track, { x: -(A + B), ease: "none", duration: px(B) }, px(PRE + A + PAUSE));
+
+      // No capítulo-diálogo os stats dão lugar à frase-fecho: ela sobe
+      // GRANDE quando a mídia abre e segue derivando pra cima (parallax)
+      // enquanto a foto desliza no trecho B.
+      if (q(".ch-finale").length) {
+        tl.fromTo(
+          q(".ch-finale"),
+          { yPercent: 140, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: px(PAUSE * 0.4), ease: "power2.out" },
+          px(PRE + A + PAUSE * 0.3),
+        ).to(
+          q(".ch-finale"),
+          { y: "-3.2rem", ease: "none", duration: px(B) },
+          px(PRE + A + PAUSE),
+        );
+      }
+
+      if (q(".ch-stats").length && !chapter.finale) {
+        tl.fromTo(
+          q(".ch-stats"),
+          { yPercent: 120 },
+          // Duração amarrada a PAUSE e B, nunca fixa: um valor cravado (1500px)
+          // estoura o fim da timeline em telas largas, e como o ScrollTrigger
+          // mapeia o scroll pela duração TOTAL, tudo encolhe junto — o
+          // horizontal deixa de chegar ao fim dentro do pin. Terminar
+          // exatamente em `total` é o que mantém o mapeamento honesto.
+          { yPercent: 0, duration: px(PAUSE * 0.35), ease: "power2.out" },
+          px(PRE + A + PAUSE * 0.3),
+        );
+      }
 
       // Os numerais CONTAM enquanto sobem — só os que são número puro
       // (1400, 232…); os compostos (11'40, 1:16, 4×) ficam como estão.
@@ -933,7 +908,12 @@ export function ChapterSection({
         <h2 id={`${chapter.key}-title`}>
           {chapter.index} — {chapter.title}: {chapter.heading}
         </h2>
-        <p>{chapter.lead}</p>
+        <p>
+          {chapter.voiceLead
+            ? `“${chapter.lead}” — ${chapter.voiceLead.quem}`
+            : chapter.lead}
+        </p>
+        {chapter.finale && <p>{chapter.finale}</p>}
         <p>{chapter.caption}</p>
         <ul>
           {stats.map((stat) => (
@@ -1144,10 +1124,36 @@ export function ChapterSection({
           <p className="t-cap text-cream/85">{chapter.caption}</p>
         </figcaption>
 
+        {/* A frase-fecho GRANDE no lugar dos stats — a última imagem do
+            capítulo carrega a última frase, subindo com parallax enquanto a
+            mídia desliza por baixo. Só a EXECUÇÃO usa por ora. */}
+        {chapter.finale && (
+          <div
+            className={`ch-finale absolute inset-x-[6vw] bottom-[9svh] text-center opacity-0 ${
+              color.blend ? "blend-diff" : ""
+            }`}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 400,
+                fontSize: "5.6rem",
+                lineHeight: 0.9,
+                letterSpacing: "-0.02em",
+                color: "#f7f2e8",
+              }}
+            >
+              {chapter.finale}
+            </p>
+          </div>
+        )}
+
         {/* Os dados sobem por cima da foto já aberta. Numerais vazados,
             rótulos minúsculos — o contraste de escala é o recurso. */}
         <div
-          className={`ch-stats absolute right-[3.4rem] bottom-[3rem] left-[3.4rem] flex items-end justify-between gap-[3rem] ${
+          className={`ch-stats absolute right-[3.4rem] bottom-[3rem] left-[3.4rem] ${
+            chapter.finale ? "hidden" : "flex"
+          } items-end justify-between gap-[3rem] ${
             color.blend ? "blend-diff" : ""
           }`}
         >
@@ -1210,10 +1216,27 @@ export function ChapterSection({
           ))}
         </div>
 
-        <div className="ch-leadbox absolute right-[6vw] bottom-[11svh] max-w-[30rem] opacity-0 lg:right-[3.4rem]">
-          <p className="ch-lead t-body text-cream/95">
+        <div
+          className={`ch-leadbox absolute right-[6vw] bottom-[11svh] opacity-0 lg:right-[3.4rem] ${
+            chapter.voiceLead ? "max-w-[42rem] text-right" : "max-w-[30rem]"
+          }`}
+        >
+          {/* No capítulo-diálogo o lead é a FALA: serif itálico grande (a
+              "voz" do site), escrita palavra a palavra pelo mesmo scrub. */}
+          <p
+            className={
+              chapter.voiceLead
+                ? "ch-lead voice text-[2.2rem] leading-[1.26] text-cream/95"
+                : "ch-lead t-body text-cream/95"
+            }
+          >
             {chapter.lead}
           </p>
+          {chapter.voiceLead && (
+            <p className="t-micro mt-[1.3rem] text-cream/60">
+              — {chapter.voiceLead.quem}
+            </p>
+          )}
         </div>
       </div>
 

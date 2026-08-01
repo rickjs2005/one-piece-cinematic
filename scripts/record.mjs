@@ -22,17 +22,14 @@ const REAL = Number(process.argv[2] ?? 120);
 const TARGET = Number(process.argv[3] ?? 55);
 const OUT = process.argv[4] ?? "./tmp-rec";
 
+// SEM SwiftShader de propósito: este site não tem WebGL (o hero é <video>),
+// então o headless pode compor na GPU de verdade — o screencast salta de
+// ~5fps pra 20-30fps e a fluidez do vídeo final vem daí. (Os flags de
+// software eram herança dos sites com Three.js.)
 const browser = await puppeteer.launch({
   executablePath: EDGE,
   headless: true,
-  args: [
-    "--enable-unsafe-swiftshader",
-    "--use-angle=swiftshader",
-    "--use-gl=angle",
-    "--hide-scrollbars",
-    "--no-first-run",
-    "--mute-audio",
-  ],
+  args: ["--hide-scrollbars", "--no-first-run", "--mute-audio"],
 });
 
 const page = await browser.newPage();

@@ -33,6 +33,17 @@ export type Chapter = {
   hero: Stat;
   /** os três dados que deslizam por cima do vídeo/foto */
   stats: [Stat, Stat, Stat];
+  /**
+   * O capítulo fala em DIÁLOGO (só a EXECUÇÃO): o lead vira uma fala em
+   * serif grande (a voz do Roger) em vez de parágrafo corrido, com o
+   * crédito embaixo.
+   */
+  voiceLead?: { quem: string };
+  /**
+   * Frase-fecho GRANDE que sobe com parallax sobre a mídia aberta, no lugar
+   * dos três stats — a última imagem do capítulo carrega a última frase.
+   */
+  finale?: string;
   images: {
     /**
      * Vídeo em sangria — o ativo que sustenta o painel de mídia.
@@ -79,10 +90,15 @@ export type Chapter = {
 export const CHAPTERS: Chapter[] = [
   {
     key: "execucao", index: "01", title: "EXECUÇÃO", nav: "Execução", kicker: "A palavra",
-    heading: "Uma frase soltou o mundo no mar.",
-    headline: { lines: ["Uma frase", "soltou o mundo", "no mar."], hot: 0 },
+    // O capítulo inteiro é o diálogo do cadafalso, uma fala por imagem:
+    // a multidão pergunta na parede aberta, o Roger responde em serif
+    // grande na parede do close, e a mídia fecha com o início da era.
+    heading: "— O One Piece… o tesouro dele existe mesmo?!",
+    headline: { lines: ["— O One Piece…", "o tesouro dele", "existe mesmo?!"], hot: 2 },
     wall: { wide: 0, mid: 1 },
-    lead: "Gol D. Roger conquistou tudo, dissolveu a própria tripulação e se entregou. No cadafalso, perguntaram do tesouro — ele respondeu que estava tudo lá, era só ir buscar. O Governo queria encerrar a pirataria com aquela morte. Em um único dia, cada porto do planeta soltou um navio no mar.",
+    lead: "Minhas riquezas? Se quiserem, podem pegar. Procurem! Eu deixei tudo naquele lugar.",
+    voiceLead: { quem: "Gol D. Roger, no cadafalso" },
+    finale: "E a Grande Era dos Piratas começou.",
     caption: "Loguetown, a praça da execução — onde tudo começou e terminou.",
     hero: { value: "22", unit: "anos", label: "Do cadafalso ao barco a remo" },
     stats: [
