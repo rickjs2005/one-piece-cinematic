@@ -88,6 +88,13 @@ type SceneSpec = {
   air?: "mist" | "rays" | "embers" | "grounds";
   /** bloco poético */
   block: { side: "left" | "right"; icon: string; copy: React.ReactNode };
+  /**
+   * Diálogo encenado no centro-baixo do painel de abertura — só a EXECUÇÃO
+   * usa: a pergunta da multidão e a resposta que abriu a era. Entra pela
+   * timeline quando o título do capítulo se dissolve (segunda batida da
+   * abertura: nome → fala).
+   */
+  dialogo?: { pergunta: string; resposta: string; quem: string };
 };
 
 /** ícones de traço (paths 24×24) — os mesmos glifos do índice da nav */
@@ -126,6 +133,14 @@ const SCENES: Record<string, SceneSpec> = {
           <em className="voice">um convite</em> — e o mundo inteiro aceitou.
         </>
       ),
+    },
+    // A resposta é a mesma fala canônica da vitrine (voices.ts) — uma voz
+    // só no site inteiro, acrescida do "deixei tudo lá" do cadafalso.
+    dialogo: {
+      pergunta: "— O One Piece… o tesouro dele existe mesmo?!",
+      resposta:
+        "Minhas riquezas? Se quiserem, podem pegar. Procurem! Eu deixei tudo naquele lugar.",
+      quem: "Gol D. Roger — e a Grande Era dos Piratas começou",
     },
   },
   tripulacao: {
@@ -347,6 +362,24 @@ function ChapterScene({ chapter }: { chapter: Chapter }) {
         <p className="t-body ink-soft mt-[1.1rem]">{scene.block.copy}</p>
       </div>
 
+      {/* O diálogo do cadafalso — a segunda batida da abertura. Nasce
+          invisível e a timeline o revela quando o título se dissolve; a
+          posição centro-baixo não disputa com o bloco poético (direita) nem
+          com o rótulo do numeral (esquerda). No reduced-motion o título não
+          sai de cena, então o diálogo apenas coexiste embaixo. */}
+      {scene.dialogo && (
+        <div className="ch-dialogo absolute inset-x-0 bottom-[15vh] z-[3] mx-auto max-w-[30rem] text-center opacity-0">
+          <p className="t-micro ink-soft">{scene.dialogo.pergunta}</p>
+          <p
+            className="voice mt-[0.85rem] text-[1.35rem] leading-[1.32]"
+            style={{ color: accent }}
+          >
+            “{scene.dialogo.resposta}”
+          </p>
+          <p className="t-micro ink-faint mt-[0.85rem]">{scene.dialogo.quem}</p>
+        </div>
+      )}
+
       {/* o objeto da cena */}
       <div className="x-cup z-[2]" style={scene.obj.style}>
         {scene.steam && (
@@ -451,6 +484,8 @@ export function ChapterSection({
         // a legenda do travelling não existe empilhada (é `hidden lg:block`),
         // mas sem movimento no desktop ela precisa nascer visível
         gsap.set([...q(".ch-headline"), ...q(".ch-leadbox")], { opacity: 1 });
+        // idem o diálogo do cadafalso: sem timeline, nasce visível
+        gsap.set(q(".ch-dialogo"), { opacity: 1 });
 
         // Sem movimento: fica no poster. Movimento é justamente o que a
         // pessoa pediu pra não ter.
@@ -562,6 +597,18 @@ export function ChapterSection({
           px(1500),
         )
         .to(q(".ch-title"), { opacity: 0, duration: px(550), ease: "power2.in" }, px(1750));
+
+      // A segunda batida da abertura: o nome sai, a FALA entra. Só existe
+      // na EXECUÇÃO (o diálogo do cadafalso) — nos outros capítulos o
+      // seletor volta vazio e nada acontece.
+      if (q(".ch-dialogo").length) {
+        tl.fromTo(
+          q(".ch-dialogo"),
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: px(500), ease: "power2.out" },
+          px(1900),
+        );
+      }
 
       /* ---- 1b. camadas da cena e paralaxe de fundo --------------------- */
 
