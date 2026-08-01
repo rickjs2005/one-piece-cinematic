@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
-import { SmoothScroll } from "@/lib/smooth-scroll";
-import { Preloader } from "@/components/ui/Preloader";
+import { Anton, Fraunces, Inter } from "next/font/google";
+import { Magnetics } from "@/components/magnetics";
 import "./globals.css";
 
 const anton = Anton({
@@ -13,6 +12,14 @@ const anton = Anton({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "WONK", "opsz"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,12 +36,11 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${anton.variable} ${inter.variable} h-full antialiased`}
+      className={`${anton.variable} ${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="bg-abyss text-parchment min-h-full">
-        <Preloader />
-        <SmoothScroll />
         {children}
+        <Magnetics />
       </body>
     </html>
   );
