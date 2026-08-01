@@ -26,24 +26,83 @@ import { ROUTE, ROUTE_PATH, SEAS, WORLD } from "@/content/route";
  */
 export function CrewPanel() {
   return (
-    <div className="flex w-full gap-[1.2rem] overflow-x-auto pb-[0.4rem] lg:grid lg:grid-cols-[repeat(5,8.5rem)] lg:justify-center lg:gap-x-[1.8rem] lg:gap-y-[2.4rem] lg:overflow-visible lg:pb-0">
-      {CREW.map((mate) => (
-        <article key={mate.id} className="w-[8.5rem] shrink-0">
-          <div className="relative aspect-[4/5] overflow-hidden">
+    <div className="flex w-full gap-[1.2rem] overflow-x-auto pb-[0.4rem] lg:grid lg:grid-cols-[repeat(5,9rem)] lg:justify-center lg:gap-x-[1.6rem] lg:gap-y-[1.8rem] lg:overflow-visible lg:pb-0">
+      {CREW.map((mate, i) => (
+        /* Cartaz de procurado — papel-pergaminho, moldura dupla e uma
+           rotação mínima alternada: dez cartazes pregados num mural, não
+           dez cards de interface. Tudo CSS em cima do retrato que já
+           existia; texto vivo (nada de arte gerada com texto embutido). */
+        <article
+          key={mate.id}
+          className="w-[9rem] shrink-0 px-[0.55rem] pt-[0.5rem] pb-[0.45rem] text-center shadow-[0_0.4rem_1rem_rgb(0_0_0/0.35)]"
+          style={{
+            background:
+              "linear-gradient(160deg, #efe3c0 0%, #e6d5a8 55%, #d9c48f 100%)",
+            border: "1px solid #8a6f3f",
+            outline: "1px solid rgb(59 42 24 / 0.55)",
+            outlineOffset: "-0.28rem",
+            color: "#3b2a18",
+            transform: `rotate(${i % 2 === 0 ? -0.7 : 0.7}deg)`,
+          }}
+        >
+          <p
+            className="leading-none"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.5rem",
+              letterSpacing: "0.04em",
+            }}
+          >
+            WANTED
+          </p>
+          <div
+            className="relative mx-auto mt-[0.35rem] aspect-[4/5] w-full overflow-hidden"
+            style={{ border: "1px solid rgb(59 42 24 / 0.5)" }}
+          >
             <Image
               src={mate.portrait}
-              alt={`${mate.name}, ${mate.role.toLowerCase()} dos Chapéus de Palha`}
+              alt={`Cartaz de procurado de ${mate.name}, ${mate.role.toLowerCase()} dos Chapéus de Palha`}
               fill
-              sizes="8.5rem"
+              sizes="9rem"
               className="object-cover object-top"
+              style={{ filter: "sepia(0.28) contrast(1.05) saturate(0.9)" }}
             />
           </div>
-          <p className="t-micro ink-soft mt-[0.6rem] truncate">{mate.name}</p>
           <p
-            className="t-cap ink-faint mt-[0.15rem] truncate"
-            style={{ fontSize: "0.6rem" }}
+            className="mt-[0.35rem] leading-none font-semibold"
+            style={{ fontSize: "0.5rem", letterSpacing: "0.32em" }}
+          >
+            DEAD OR ALIVE
+          </p>
+          <p
+            className="mt-[0.3rem] truncate leading-none uppercase"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "0.78rem",
+              letterSpacing: "0.03em",
+            }}
+          >
+            {mate.name}
+          </p>
+          <p
+            className="t-nums mt-[0.3rem] leading-none font-bold"
+            style={{ fontSize: "0.72rem" }}
+          >
+            {/* ฿ é o símbolo do Berry nos cartazes da obra */}
+            <span aria-hidden>฿</span> {mate.bounty}
+          </p>
+          {/* a letra miúda do cartaz guarda o que o card antigo contava */}
+          <p
+            className="mt-[0.35rem] truncate leading-none"
+            style={{ fontSize: "0.48rem", letterSpacing: "0.06em", opacity: 0.75 }}
           >
             {mate.role} · {mate.dream}
+          </p>
+          <p
+            className="mt-[0.3rem] leading-none"
+            style={{ fontSize: "0.42rem", letterSpacing: "0.4em", opacity: 0.5 }}
+          >
+            MARINE
           </p>
         </article>
       ))}
