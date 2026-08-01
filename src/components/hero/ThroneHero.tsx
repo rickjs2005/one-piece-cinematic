@@ -104,7 +104,6 @@ export function ThroneHero() {
   return (
     <section
       ref={root}
-      id="topo"
       className="relative h-[400svh]"
       aria-label="One Piece — abertura"
     >

@@ -49,7 +49,14 @@ export function Falas() {
             {voice.quote} {voice.weight}
           </h3>
 
-          <div className="relative grid gap-[2.4rem] px-[6vw] py-[4rem] lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:items-center lg:gap-[4rem] lg:px-[3.4rem] lg:py-[5.5rem]">
+          {/* Bloco visual: duplica em pedaços (contexto/nome/lead/frase/porquê)
+              o que o `h3.sr-only` acima já diz inteiro e na ordem certa —
+              mesmo padrão do chapter.tsx (sr-only carrega o conteúdo
+              acessível, o bloco decorativo fica `aria-hidden`). */}
+          <div
+            aria-hidden
+            className="relative grid gap-[2.4rem] px-[6vw] py-[4rem] lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:items-center lg:gap-[4rem] lg:px-[3.4rem] lg:py-[5.5rem]"
+          >
             {/* o numeral gigante de fundo: vazado em repouso, e no hover da
                 LINHA INTEIRA ganha preenchimento translúcido na cor do
                 acento (regra já pronta em `.coffee-row:hover .coffee-num`).
