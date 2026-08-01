@@ -198,11 +198,11 @@ export function Intro() {
               que são o ponto deste parágrafo. */}
           <p className="t-lead text-cream/85">
             Não é lenda passada adiante boca a boca. É a mesma obra, contada de
-            novo: o grito de um homem no cadafalso, a{" "}
+            novo: a frase de um homem no cadafalso, a{" "}
             <em className="voice text-[var(--color-gold)]">tripulação</em> que se
             formou por acaso e o{" "}
-            <em className="voice text-[var(--color-ember)]">tesouro</em> que
-            ainda não tem dono — só uma rota até ele.
+            <em className="voice text-[var(--color-ember)]">tesouro</em> que ele
+            disse estar lá, à espera de quem for buscar.
           </p>
 
           <p className="t-body max-w-[44ch] text-cream/50" data-reveal="write">
