@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
-import { SmoothScroll } from "@/lib/smooth-scroll";
-import { Preloader } from "@/components/ui/Preloader";
+import { Anton, Fraunces, Inter } from "next/font/google";
+import { Magnetics } from "@/components/magnetics";
 import "./globals.css";
 
 const anton = Anton({
@@ -15,10 +14,32 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "WONK", "opsz"],
+  display: "swap",
+});
+
+const TITLE = "One Piece — A história que o mundo tentou apagar";
+const DESCRIPTION =
+  "De um homem rindo no cadafalso até uma cadeira no fim do mundo. A jornada, a tripulação e as falas que ficaram.";
+
 export const metadata: Metadata = {
-  title: "One Piece — A história que o mundo tentou apagar",
-  description:
-    "De um homem rindo no cadafalso até uma cadeira no fim do mundo. A jornada, a tripulação e as falas que ficaram.",
+  // Placeholder: o alias final de deploy pode mudar (ver os outros projetos
+  // do molde terral, cada um ganhou o próprio domínio .vercel.app na hora do
+  // deploy) — ajustar aqui quando o projeto for pro ar de verdade.
+  metadataBase: new URL("https://one-piece-animes.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: "pt_BR",
+    type: "website",
+    images: ["/shot/amanhecer/full.webp"],
+  },
 };
 
 export default function RootLayout({
@@ -29,12 +50,11 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${anton.variable} ${inter.variable} h-full antialiased`}
+      className={`${anton.variable} ${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="bg-abyss text-parchment min-h-full">
-        <Preloader />
-        <SmoothScroll />
         {children}
+        <Magnetics />
       </body>
     </html>
   );

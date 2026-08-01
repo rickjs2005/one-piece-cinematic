@@ -1,57 +1,35 @@
+import { ChapterSection } from "@/components/chapter";
+import { CrewPanel, MapPanel, MomentsPanel } from "@/components/chapter-extras";
+import { Falas } from "@/components/falas";
+import { Intro } from "@/components/intro";
+import { Nav } from "@/components/nav";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteShell } from "@/components/site-shell";
 import { ThroneHero } from "@/components/hero/ThroneHero";
-import { Manifesto } from "@/components/sections/Manifesto";
-import { Era } from "@/components/sections/Era";
-import { Crew } from "@/components/sections/Crew";
-import { FlagReveal } from "@/components/sections/FlagReveal";
-import { GrandLineMap } from "@/components/sections/GrandLineMap";
-import { Moments } from "@/components/sections/Moments";
-import { Voices } from "@/components/sections/Voices";
-import { Footer } from "@/components/sections/Footer";
-import { Marquee } from "@/components/ui/Marquee";
+import { CHAPTERS } from "@/content/chapters";
+
+const EXTRAS: Record<string, React.ReactNode> = {
+  tripulacao: <CrewPanel />,
+  rota: <MapPanel />,
+  // Os 8 momentos da jornada (arcos-chave, Loguetown → Egghead) voltam aqui —
+  // conteúdo restaurado do commit que os removeu, promessa da spec de que
+  // "nenhum conteúdo textual se perde" no port pro molde terral.
+  guerras: <MomentsPanel />,
+};
 
 export default function Home() {
   return (
-    <main>
-      <ThroneHero />
-      <Manifesto />
-
-      <Marquee
-        items={[
-          "A Era dos Piratas",
-          "O Século Vazio",
-          "Grand Line",
-          "Laugh Tale",
-          "D.",
-        ]}
-      />
-
-      <Era />
-      <Crew />
-
-      <Marquee
-        reverse
-        duration={42}
-        items={[
-          "Luffy",
-          "Zoro",
-          "Nami",
-          "Usopp",
-          "Sanji",
-          "Chopper",
-          "Robin",
-          "Franky",
-          "Brook",
-          "Jinbe",
-        ]}
-      />
-
-      <FlagReveal />
-      {/* O mapa dá a visão geral da rota; a Jornada logo em seguida entra nas
-          paradas que importaram. Invertido, os momentos chegariam sem chão. */}
-      <GrandLineMap />
-      <Moments />
-      <Voices />
-      <Footer />
-    </main>
+    <SiteShell>
+      <Nav />
+      <main id="topo">
+        <ThroneHero />
+        <Intro />
+        {CHAPTERS.map((chapter, i) => (
+          <ChapterSection key={chapter.key} chapter={chapter} first={i === 0} extra={EXTRAS[chapter.key]} />
+        ))}
+        <Falas />
+      </main>
+      <SiteFooter />
+    </SiteShell>
   );
 }
