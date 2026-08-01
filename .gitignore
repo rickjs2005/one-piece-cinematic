@@ -43,3 +43,4 @@ next-env.d.ts
 # capturas de verificação visual (Playwright/ffmpeg) e logs soltos
 tmp-shots*/
 *.log
+videos/
