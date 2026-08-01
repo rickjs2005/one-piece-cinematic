@@ -13,23 +13,35 @@ import { ROUTE, ROUTE_PATH, SEAS, WORLD } from "@/content/route";
    nasce traçada e os retratos já nascem no lugar, estáticos.
    -------------------------------------------------------------------------- */
 
-/** A tripulação, em fileira horizontal de retratos — estática. */
+/**
+ * A tripulação, em grade — estática.
+ *
+ * Era uma fileira horizontal de 10 cards de 16rem (`overflow-x-auto`): a
+ * 96rem/88vw úteis do painel, isso soma 2848px de conteúdo contra ~1408px de
+ * largura visível — 6 tripulantes ficavam escondidos atrás do scroll interno,
+ * quebrando a promessa de "nenhum conteúdo se perde". No desktop vira grade
+ * 5×2 de cards de 8,5rem: os 10 cabem inteiros, sem scroller aninhado. Só o
+ * mobile mantém a fileira com scroll — lá 5 colunas ficariam ilegíveis.
+ */
 export function CrewPanel() {
   return (
-    <div className="flex w-full gap-[2rem] overflow-x-auto">
+    <div className="flex w-full gap-[1.2rem] overflow-x-auto pb-[0.4rem] lg:grid lg:grid-cols-[repeat(5,8.5rem)] lg:justify-center lg:gap-x-[1.8rem] lg:gap-y-[2.4rem] lg:overflow-visible lg:pb-0">
       {CREW.map((mate) => (
-        <article key={mate.id} className="w-[16rem] shrink-0">
+        <article key={mate.id} className="w-[8.5rem] shrink-0">
           <div className="relative aspect-[4/5] overflow-hidden">
             <Image
               src={mate.portrait}
               alt={`${mate.name}, ${mate.role.toLowerCase()} dos Chapéus de Palha`}
               fill
-              sizes="16rem"
+              sizes="8.5rem"
               className="object-cover object-top"
             />
           </div>
-          <p className="t-micro ink-soft mt-[0.9rem]">{mate.name}</p>
-          <p className="t-cap ink-faint mt-[0.3rem]">
+          <p className="t-micro ink-soft mt-[0.6rem] truncate">{mate.name}</p>
+          <p
+            className="t-cap ink-faint mt-[0.15rem] truncate"
+            style={{ fontSize: "0.6rem" }}
+          >
             {mate.role} · {mate.dream}
           </p>
         </article>
