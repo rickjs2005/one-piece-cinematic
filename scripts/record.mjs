@@ -71,32 +71,37 @@ await wait(6400);
 const boundary = Date.now() / 1000;
 const boundaryIdx = n;
 
-// o scroll anda em TEMPO REAL dentro da página (rAF + performance.now):
-// não depende do ritmo do runner nem do custo de captura
+// O scroll é dirigido DO LADO DO NODE, em passos de ~30ms de relógio de
+// parede. A versão anterior usava rAF dentro da página e travou com a GPU
+// (rAF estagnado = promise que nunca resolve = captura pendurada até o
+// kill do runner, com 11 Edges zumbis sobrando — visto na prática).
+// Passos de scrollTo são baratos; o scrub (1s) alisa entre eles.
 const docH = await page.evaluate(
   () => document.body.scrollHeight - innerHeight,
 );
-await page.evaluate(
-  (ms, target) =>
-    new Promise((done) => {
-      const t0 = performance.now();
-      const tick = () => {
-        const t = Math.min(1, (performance.now() - t0) / ms);
-        // linear de propósito: o scrub (1s) já suaviza as pontas, e ritmo
-        // constante dá o mesmo tempo por pixel a cada capítulo
-        window.scrollTo(0, Math.round(t * target));
-        if (t >= 1) return done(undefined);
-        requestAnimationFrame(tick);
-      };
-      tick();
-    }),
-  REAL * 1000,
-  docH,
-);
+{
+  const t0 = Date.now();
+  let lastLog = 0;
+  for (;;) {
+    const t = Math.min(1, (Date.now() - t0) / (REAL * 1000));
+    await page.evaluate((y) => window.scrollTo(0, y), Math.round(t * docH));
+    if (t - lastLog >= 0.2) {
+      lastLog = t;
+      console.log(`scroll ${(t * 100).toFixed(0)}% · ${n} frames`);
+    }
+    if (t >= 1) break;
+    await wait(30);
+  }
+}
 await wait(1500); // o scrub alcança o rodapé
-await client.send("Page.stopScreencast");
-await Promise.all(pending);
-await browser.close();
+
+// Finalização BLINDADA: com GPU, stopScreencast/close já penduraram pra
+// sempre (captura completa, lista nunca escrita, kill aos 10min — visto na
+// prática). Nada daqui pra baixo pode esperar o browser pra sempre; a
+// lista é escrita ANTES do close e o processo sai na marra no fim.
+const raced = (p, ms) => Promise.race([p.catch(() => {}), wait(ms)]);
+await raced(client.send("Page.stopScreencast"), 5000);
+await raced(Promise.all(pending), 30000);
 
 /* ---- lista do ffmpeg com dois relógios ---------------------------------- */
 if (meta.length < 10) {
@@ -123,3 +128,6 @@ await writeFile(join(OUT, "frames", "list.txt"), list);
 console.log(
   `frames: ${meta.length} (loader real: ${boundaryIdx}, jornada: ${journey.length} | ${realSpan.toFixed(1)}s reais -> ${TARGET}s, escala ${scale.toFixed(3)})`,
 );
+
+await raced(browser.close(), 5000);
+process.exit(0);
