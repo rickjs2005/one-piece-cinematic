@@ -22,10 +22,24 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+const TITLE = "One Piece — A história que o mundo tentou apagar";
+const DESCRIPTION =
+  "De um homem rindo no cadafalso até uma cadeira no fim do mundo. A jornada, a tripulação e as falas que ficaram.";
+
 export const metadata: Metadata = {
-  title: "One Piece — A história que o mundo tentou apagar",
-  description:
-    "De um homem rindo no cadafalso até uma cadeira no fim do mundo. A jornada, a tripulação e as falas que ficaram.",
+  // Placeholder: o alias final de deploy pode mudar (ver os outros projetos
+  // do molde terral, cada um ganhou o próprio domínio .vercel.app na hora do
+  // deploy) — ajustar aqui quando o projeto for pro ar de verdade.
+  metadataBase: new URL("https://one-piece-animes.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: "pt_BR",
+    type: "website",
+    images: ["/shot/amanhecer/full.webp"],
+  },
 };
 
 export default function RootLayout({
