@@ -8,28 +8,39 @@
  * runner — visto na prática). O screencast entrega os frames que o browser
  * já renderizou, com timestamp, quase de graça.
  *
- * Uso: node scripts/record.mjs <realSec> <targetSec> <outDir>
+ * Uso: node scripts/record.mjs <realSec> <targetSec> <outDir> [url] [--webgl]
  *   realSec   quanto tempo real o scroll leva (mais tempo = mais frames)
  *   targetSec duração final do trecho de jornada no vídeo
+ *   url       padrão http://localhost:3010 — serve pra gravar OUTROS sites
+ *   --webgl   liga o SwiftShader (sites com Three.js não renderizam WebGL
+ *             na GPU do headless; custa fps, mas é o único jeito)
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import puppeteer from "puppeteer-core";
 
 const EDGE = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
-const URL = "http://localhost:3010";
-const REAL = Number(process.argv[2] ?? 120);
-const TARGET = Number(process.argv[3] ?? 55);
-const OUT = process.argv[4] ?? "./tmp-rec";
+const args = process.argv.slice(2).filter((a) => a !== "--webgl");
+const WEBGL = process.argv.includes("--webgl");
+const REAL = Number(args[0] ?? 120);
+const TARGET = Number(args[1] ?? 55);
+const OUT = args[2] ?? "./tmp-rec";
+const URL = args[3] ?? "http://localhost:3010";
 
-// SEM SwiftShader de propósito: este site não tem WebGL (o hero é <video>),
-// então o headless pode compor na GPU de verdade — o screencast salta de
-// ~5fps pra 20-30fps e a fluidez do vídeo final vem daí. (Os flags de
-// software eram herança dos sites com Three.js.)
+// SEM SwiftShader por padrão: sites sem WebGL compõem na GPU de verdade e o
+// screencast salta de ~5fps pra ~50fps. Sites com Three.js precisam do
+// --webgl (SwiftShader), senão o canvas sai preto no headless.
 const browser = await puppeteer.launch({
   executablePath: EDGE,
   headless: true,
-  args: ["--hide-scrollbars", "--no-first-run", "--mute-audio"],
+  args: [
+    ...(WEBGL
+      ? ["--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--use-gl=angle"]
+      : []),
+    "--hide-scrollbars",
+    "--no-first-run",
+    "--mute-audio",
+  ],
 });
 
 const page = await browser.newPage();
