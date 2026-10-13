@@ -15,7 +15,14 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 /** Dados da casa — coluna de leitura, não três blocos soltos lado a lado. */
 const DADOS = [
   { label: "A obra", lines: ["One Piece — Eiichiro Oda", "Shueisha · Toei Animation"] },
-  { label: "Este site", lines: ["Projeto de demonstração", "Ilustrações geradas por IA"] },
+  {
+    label: "Este site",
+    lines: [
+      "Fan-made, sem fins comerciais",
+      "Sem afiliação com Oda, Shueisha ou Toei",
+      "Ilustrações geradas por IA",
+    ],
+  },
   { label: "Feito por", lines: ["MilWeb — milweb.com.br"] },
 ];
 
@@ -222,7 +229,7 @@ export function SiteFooter() {
 
       <div className="relative flex flex-wrap items-baseline justify-between gap-[1rem] px-[6vw] py-[2.4rem] lg:px-[3.4rem]">
         <p className="t-micro text-cream/30">
-          Projeto de demonstração — sem vínculo com os detentores dos direitos. Site por{" "}
+          Projeto fan-made, sem fins comerciais — sem vínculo com os detentores dos direitos. Site por{" "}
           <a
             href="https://milweb.com.br"
             target="_blank"

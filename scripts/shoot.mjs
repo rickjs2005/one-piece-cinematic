@@ -11,7 +11,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import puppeteer from "puppeteer-core";
 
-const EDGE = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
+// BROWSER_PATH aponta para outro Chromium (Linux/macOS); o padrão é o Edge no Windows.
+const EDGE =
+  process.env.BROWSER_PATH ?? "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const args = process.argv.slice(2).filter((a) => a !== "--reduced");
 const REDUCED = process.argv.includes("--reduced");
 const URL = args[0] ?? "http://localhost:3010";
